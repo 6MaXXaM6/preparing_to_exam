@@ -1,0 +1,959 @@
+\documentclass[a4paper, 12pt]{article}
+ 
+\usepackage[T2A]{fontenc}
+\usepackage[russian, english]{babel}
+\usepackage{fancyhdr}
+\usepackage[utf8]{inputenc}
+\usepackage{subfiles}
+\usepackage{ucs}
+\usepackage{pgfplots}
+\usepackage{textcomp}
+\usepackage{array}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{enumerate}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{authblk}
+\usepackage{tikz}
+\usepackage{icomma}
+\usepackage{gensymb}
+\usepackage{geometry}
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{lipsum}
+\usepackage{multicol}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows.meta}
+\usepackage{caption} 
+
+\DeclareMathOperator{\rg}{rang}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\norma}[1]{\Vert #1 \Vert}
+\newcommand{\system}[2]{#1_1, #1_1, \dots, #1_#2}
+\newcommand{\basis}{\system{e}{n}}
+\renewcommand{\C}{\mathbb{C}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\CHI}{\scalebox{1.5}{\(\chi\)}}
+\newcommand{\EPSILON}{\scalebox{1.5}{\(\varepsilon\)}}
+\newcommand{\N} {\mathbb{N}}
+\newcommand{\Z} {\mathbb{Z}}
+\newcommand{\R} {\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\ord} {\mathop{\rm ord}}
+\newcommand{\Ima}{\mathop{\rm Im}}
+\newcommand{\Rea}{\mathop{\rm Re}}
+\newcommand{\rk}{\mathop{\rm rk}}
+\newcommand{\arccosh}{\mathop{\rm arccosh}}
+\newcommand{\lker}{\mathop{\rm lker}}
+\newcommand{\rker}{\mathop{\rm rker}}
+\newcommand{\tr}{\mathop{\rm tr}}
+\newcommand{\St}{\mathop{\rm St}}
+\newcommand{\Mat}{\mathop{\rm Mat}}
+\newcommand{\grad}{\mathop{\rm grad}}
+\DeclareMathOperator{\spec}{spec}
+\renewcommand{\baselinestretch}{1.5}
+\everymath{\displaystyle}
+\titleformat{\section}[block]{\bfseries\filcenter}{}{0pt}{\Large}
+\hypersetup{colorlinks=true, linkcolor=olive, urlcolor=blue}
+
+\renewcommand{\r}{\right}
+\renewcommand{\l}{\left}
+\newcommand{\Sum}[2]{\overset{#2}{\underset{#1}{\sum}}}
+\newcommand{\Lim}[2]{\lim\limits_{#1 \rightarrow #2}}
+\newcommand{\p}[2]{\frac{\partial #1}{\partial #2}}
+ 
+
+\newcommand{\task}[1] {\noindent \textbf{Задача #1.} \hfill}
+\newcommand{\note}[1] {\noindent \textbf{Примечание #1.} \hfill}
+
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    inputencoding=utf8,      % Кодировка файла с кодом
+    extendedchars=\true,     % Разрешить символы за пределами ASCII
+    literate=                % Ручное объявление кириллицы
+    {ё}{{\"e}}1
+    {Ё}{{\"E}}1
+    {й}{{\\'i}}1
+    {Й}{{\\'I}}1
+    {я}{{\cyra}}1
+    {Я}{{\cyrYA}}1
+    % ... и другие символы при необходимости
+    {а}{{\cyra}}1
+    {б}{{\cyrb}}1
+    {в}{{\cyrv}}1
+    {г}{{\cyrg}}1
+    {д}{{\cyrd}}1
+    {е}{{\cyre}}1
+    {ж}{{\cyrzh}}1
+    {з}{{\cyrz}}1
+    {и}{{\cyri}}1
+    {к}{{\cyrk}}1
+    {л}{{\cyrl}}1
+    {м}{{\cyrm}}1
+    {н}{{\cyrn}}1
+    {о}{{\cyro}}1
+    {п}{{\cyrp}}1
+    {р}{{\cyrr}}1
+    {с}{{\cyrs}}1
+    {т}{{\cyrt}}1
+    {у}{{\cyru}}1
+    {ф}{{\cyrf}}1
+    {х}{{\cyrh}}1
+    {ц}{{\cyrc}}1
+    {ч}{{\cyrch}}1
+    {ш}{{\cyrsh}}1
+    {щ}{{\cyrshch}}1
+    {ъ}{{\cyrhrdsn}}1
+    {ы}{{\cyrery}}1
+    {ь}{{\cyrsftsn}}1
+    {э}{{\cyrerev}}1
+    {ю}{{\cyryu}}1
+    {А}{{\CYRA}}1
+    {Б}{{\CYRB}}1
+    {В}{{\CYRV}}1
+    {Г}{{\CYRG}}1
+    {Д}{{\CYRD}}1
+    {Е}{{\CYRE}}1
+    {Ж}{{\CYRZH}}1
+    {З}{{\CYRZ}}1
+    {И}{{\CYRI}}1
+    {К}{{\CYRK}}1
+    {Л}{{\CYRL}}1
+    {М}{{\CYRM}}1
+    {Н}{{\CYRN}}1
+    {О}{{\CYRO}}1
+    {П}{{\CYRP}}1
+    {Р}{{\CYRR}}1
+    {С}{{\CYRS}}1
+    {Т}{{\CYRT}}1
+    {У}{{\CYRU}}1
+    {Ф}{{\CYRF}}1
+    {Х}{{\CYRH}}1
+    {Ц}{{\CYRC}}1
+    {Ч}{{\CYRCH}}1
+    {Ш}{{\CYRSH}}1
+    {Щ}{{\CYRSHCH}}1
+    {Ъ}{{\CYRHRDSN}}1
+    {Ы}{{\CYRERY}}1
+    {Ь}{{\CYRSFTSN}}1
+    {Э}{{\CYREREV}}1
+    {Ю}{{\CYRYU}}1
+    {┌}{{\textSFii}}1
+    {┐}{{\textSFiii}}1
+    {└}{{\textSFvi}}1
+    {┘}{{\textSFvii}}1
+    {├}{{\textSFviii}}1
+    {─}{{\textSFx}}1
+}
+
+
+\begin{document}
+    \noindent \hyperlink{stack}{\textbf{Стек}} \\
+    \noindent\rule{\textwidth}{0.4pt} \\
+    \hyperlink{stack_add}{\textbf{Стек продолжение}}\\
+    \noindent\rule{\textwidth}{0.4pt} \\
+    \hyperlink{floatingnums}{\textbf{Числа с плавающей точкой}}\\
+    \noindent\rule{\textwidth}{0.4pt} \\
+    \hyperlink{add_floating}{\textbf{Числа с плавающей точкой, векторные инструкции}}\\
+    \noindent\rule{\textwidth}{0.4pt} \\
+    \hyperlink{dynamic_mem}{\textbf{Динамическая память}}\\
+    \noindent\rule{\textwidth}{0.4pt} \\
+    \hyperlink{strings_op}{\textbf{Строковые операции}}\\
+    \noindent\rule{\textwidth}{0.4pt} \\
+    \hyperlink{makros}{\textbf{Макросы}}\\
+    \noindent\rule{\textwidth}{0.4pt} \\
+    \hyperlink{makros2}{\textbf{If Else}}\\
+    \noindent\rule{\textwidth}{0.4pt} \\
+    \newpage
+    \section*{стек}
+    \hypertarget{stack}{}
+    вычитаем - увеличиваем память
+    прибавляем  к esp уменьшаем
+    \section*{Задачи}
+    \begin{enumerate}
+        \item Сохранить что то $\backslash$ достать
+        \item Механизм передачи параметров функции
+    \end{enumerate}
+    \section*{ИНСТРУКЦИЯ PUSH и POP}
+    \begin{enumerate}
+        \item Принимает word и double word аргументы
+        \item синтаксис: push(pop) op1 $op1 \in m16/m32/r16/r32/imm$ уточнение - при push imm (константа) всегда выделяется 4 байта
+        \item Равносильно добавить\\
+        sub esp, 4 \\
+        mov [ss:esp], op1
+        \item забрать из стека \\
+        sub op1, [ss:esp] \\
+        add esp, 4
+    \end{enumerate}
+    \section*{ещё ИНСТРУКЦИИ}
+    \begin{align*}
+        &\text{pusha/popa} && \text{16 бит} \\
+        &\text{pushad/popad} && \text{32 бит} 
+    \end{align*}
+    Берёт все регистры общего назначения и добавляет их на вершину стека
+    \begin{align*}
+        &\text{pushf/popf} && \text{16 бит} \\
+        &\text{pushfd/popfd} && \text{32 бит} 
+    \end{align*}
+    Берёт регистры флагов eflags и добавляет их на вершину стека (но не все но нам это неважно) \\
+    в 32 битной системе все 16 битные инстуркции работаю также как и 32 битные
+    \newpage{}
+    \begin{enumerate}
+        \item call метка равносильно: \\
+        sub esp, 4\\
+        mov ss:esp, eip\\
+        jmp метка \\
+        или можно передать регистр eax $\rightarrow$ call [eax+eps:eax] \\
+        \item ret op1 равносильно \\
+        mov тень, [esp]; тень - теневой регистр скрытый от нас \\
+        add esp, 4+op1 \\
+        jmp тень \\
+        Объеснение работы:
+        Программа доходит до call, она ложит в вершину стека eip (точка возврата) выполнили функцию по метке и дошли до ret  который берёт из стека eip и возвращается \\
+        call и ret обязательно добавляют и забирают память стека.
+        \\
+        \item call foo \\
+        foo: \\
+            mov eax, [esp]; в eax будет сохранено значение eip это единственный способ его достать \\
+            ret
+    \end{enumerate}
+    \newpage
+    \section*{стековый кадр}
+    \hypertarget{stack_add}{}
+    используем регистр ebp для сохранения изначального значения esp для дальнейши и call \\
+    выполнили call на некоторую метку (функцию) имеющую вид: \\
+    push ebp\\
+    mov ebp, esp \\
+    ...;  расширили стек на сколько надо для локальных переменных \\
+    mov [ebp-8], eax \\
+    mov [ebp-8+4], edx \\ локальные переменные ближе к esp внешние параметры ниже по положительеым смещениям от ebp
+    \\
+    обращение к переменным что вызывали \\
+    mov eax, [ebp] \\
+    mov [eax-8], ebx; сохранили в локальные переменные вышестоящей функции значение ebx \\
+    мы можем рекурсивно забираться дальше пока ebx $\ne$ 0 \\
+
+    \[
+    \begin{cases}
+        \text{push ebp}\\
+        \text{mov ebp, esp}
+    \end{cases} = \text{enter - в одну инстуркцию на экзамене не использовать по аналогии $\exists$ leave}
+    \]
+
+    \section*{соглашения о передаче переменных}
+    call conventions
+    \begin{enumerate}
+        \item зависят от языка программмирования
+        \item описывает способ передачи параметров
+        \item описывает способ возвращения результатов
+        \item кто чистит стек от параметров
+        \item какие регистры не меняются функцией
+    \end{enumerate}
+    Соглашения:
+    \begin{enumerate}
+        \item systemV ABI - Unix системы
+        \item cdecl - windows  C  программы
+        \item stdcall - winAPI, Freepascal
+        \item syscall - система вызова windows
+        \item fastcall - linux версия(3 параметра регистр) и windows версия(2 параметра регистр) вроде
+        \item pascal - turbopascal
+        \item thiscall - C++
+    \end{enumerate}
+    среди всего этого множества мы изучаем stdcall \\
+    способы передачи параметров
+    \begin{enumerate}
+        \item через регистры
+        \item через стек $\begin{cases}
+            \text{в прямом порядке - первый элемент ближе к началу памяти} \\
+            \text{в обратном порядке - первый элемент ближе к концу памяти}
+        \end{cases}$
+    \end{enumerate}
+    параметры в обратном порядке через стек cdecl stdcall\\
+    al - 8бит $\Z$\\
+    ax - 16бит $\Z$\\
+    eax - 32бит $\Z$\\
+    edx:eax - 64бит $\Z$\\
+    st$\emptyset$ - с плавающей точкой $\R$ \\
+    cdecl, systemV ABC:
+    СТЕК чистит тот кто вызывает функцию \\
+    stdcall, pascal: стек чистит сама функция \\
+    cdecl, stdcall: можно менять eax, ecx edx, eflags \\
+    fastcall: ecx, edx
+    \newpage
+
+    \section{Продолжение со стеком}
+    \noindent
+    имя\_функции proc public (stdcall) \\
+    $\vdots$ \\
+    имя\_функции endp \\
+
+    на паскале:
+    \begin{lstlisting}
+        function sum_numbs(a, b: integer): longintege;
+            sum_numbs := a+b
+    \end{lstlisting}
+    на ассемблере:
+    \noindent
+    \begin{lstlisting}
+        sum_numbs proc
+            push ebp
+            mov ebp, esp
+            mov ax, [ebp+8]; взяли a
+            mov dx, [ebp+12]; взяли b
+            movsx eax, ax
+            movsx edx, dx
+            add eax, edx
+            pop ebp
+            ret 8; 2 параметра
+            sum_numbs endp
+    код Функции:
+    .data
+        a dw 3
+        b dw 4
+    .code
+    ...
+    mov ax, a
+    mov bx, b
+    push ebx
+    push eax
+    call sum_numbs
+    \end{lstlisting}
+    \begin{lstlisting}
+        function sum_abc(a, b: integer; var c:longint): boolean;
+            c := a+b
+    \end{lstlisting}
+    на ассемблере:
+    \noindent
+    \begin{lstlisting}
+        sum_abc proc
+            push ebp
+            mov ebp, esp
+            mov ax, [ebp+8]; взяли a
+            mov dx, [ebp+12]; взяли b
+            add ax, dx
+            mov ecx, 0
+            jno @F; прыгнуть на ближайшую анонимную метку ниже
+            mov ecx, 1
+            @@: ; анонимная метка преобразуется в ?? 0001
+            mov edx, [ebp+16]; взяли адрес C
+            cwde; расширили ax
+            adc eax, 0; для корректности в случае переполнения
+            mov [edx], eax; записали по ссылке
+            mov eax, ecx
+            pop ebp
+            ret 12; 3*4
+            sum_abc endp
+    ;код Среды:
+    .data
+        a dw 3
+        b dw 4
+        c dd ?
+    .code
+    ...
+        push offset c; передадим ссылку
+        mov ax, b
+        push eax
+        mov ax, a
+        push eax
+        call sum_abc
+    \end{lstlisting}
+    код с лекции: \\
+    print\_number знаковое значение 32-битное number - выводим в десятичной системе значение
+    \newpage
+    Иллюстрация стека памяти для задачи 2 \\
+    \begin{tikzpicture}[
+        stack/.style={
+            draw=black, 
+            minimum width=3cm, 
+            minimum height=0.7cm, 
+            font=\ttfamily
+        },
+        node distance=0cm,
+        arr/.style={-{Stealth[scale=0.8]}, thick}
+    ]
+    
+    % Стек (esp вверху)
+    \node[stack] (data) {data};
+    \node[stack, below=of data] (ebp) {ebp};
+    \node[stack, below=of ebp] (eip) {eip};
+    \node[stack, below=of eip] (a) {a};
+    \node[stack, below=of a] (g1) {garbage};
+    \node[stack, below=of g1] (b) {b};
+    \node[stack, below=of b] (g2) {garbage};
+    \node[stack, below=of g2] (c) {addr c};
+    
+    % Указатели
+    \draw[arr, red] ([xshift=-1cm]ebp.north west) -- node[above]{\small\texttt{esp}} (ebp.north west);
+    \draw[arr, blue] ([xshift=-1.5cm]eip.north west) -- node[above]{\small\texttt{esp+4}} (eip.north west);
+    \draw[arr, blue] ([xshift=-1.5cm]a.north west) -- node[above]{\small\texttt{esp+8}} (a.north west);
+    \draw[arr, blue] ([xshift=-1.5cm]g1.north west) -- node[above]{\small\texttt{esp+10}} (g1.north west);
+    \draw[arr, blue] ([xshift=-1.5cm]b.north west) -- node[above]{\small\texttt{esp+12}} (b.north west);
+    \draw[arr, blue] ([xshift=-1.5cm]g2.north west) -- node[above]{\small\texttt{esp+14}} (g2.north west);
+    \draw[arr, blue] ([xshift=-1.5cm]c.north west) -- node[above]{\small\texttt{esp+16}} (c.north west);
+    
+    \end{tikzpicture}
+
+    \newpage 
+
+    \section{Числа с плавающей точкой}
+    \hypertarget{floatingnums}{}
+    \begin{enumerate}
+        \item FPU - floating point unit - 8087 сопроцессор (чуть инфы 1 потока)
+        \begin{description}
+            \item позволяет вычислять 10 байтные Числа
+            \item[!] в FPU существуеют регистры $st(\emptyset), st(1), st(2), \dots ,st(7)$, где $st(\emptyset)$ - вершина стека
+            \item[!] Каждый регистр имеет 80 бит (10 байт) размер, Freepascal реализует использование 80 битных чисел в типе extended (на С long double) на порядок выделяется 15 бит
+            \item[*] fld dword ptr mem; single precision (одинарная точность) float
+            \item[*] fld qword ptr mem; double precision (двойная точность) double
+            \item[*] fld tword ptr mem; long double|extended
+            \item[!] помещает в вершину стека st0 байты из памяти
+            \item[*] fstp dword|qword|tword ptr mem - инструкция кладёт в указнный адрес в памяти значение st0
+            \item[*] По соглашению stdcall возвращаем значение в st0
+            \item[!] Вся остальная инфа в лекциях первого потока, мы не этим пользуемся 
+        \end{description}
+        \item Хронология перехода набора инструкций 3DNOW $\rightarrow$ MMX $\rightarrow$ SSE $\rightarrow$ SSE2 $\rightarrow$ SSE3 (pentium pro)$ \rightarrow$ SSE4 но с появлением AMD64 $\rightarrow$ AVX $\rightarrow$ AVX2 $\rightarrow$ AVX512 \\
+        Мы работает с SSE2, SSE3 \\
+        \item SSE2
+        \begin{description}
+            \item[*] есть 7 регистров $xmm0, xmm1, \dots, xmm7$ каждый по 128 бит 
+            \item[!] Различные способы интерпретации регистров 
+            \begin{flalign*}
+                |\underset{32}{\quad}|\underset{32}{\quad}&|\underset{32}{\quad}|\underset{32}{\quad}| \\
+                |\underset{64}{\quad \quad \quad }&|\underset{64}{\quad \quad \quad}|
+            \end{flalign*}
+            \item[*] Обращение может
+            \begin{enumerate}
+                \item Скалярное $\rightarrow |\underset{32}{\quad}|$ - к блоку в мнемонике \textbf{s}calar\\
+                \item Векторное обращение к всем 128 битам в мнемонике \textbf{p}acked
+            \end{enumerate}
+            \item в продолжении sse3 число регистров выросло до 16 в AVX 32 регистра ymm в AVX 512 регистры zmm 512 битности
+            \item Скалярные инстуркции
+            \begin{enumerate}
+                \item \textbf{movss} op1, op2 ; 32 битное обращение в память|регистр op1 - память $\rightarrow$ xmm[$0\dots7$] или наоборот как укажешь
+                \item \textbf{movsd} op1, op2 ; 64 битное обращение в память|регистр op1 - память $\rightarrow$ xmm[$0\dots7$] или наоборот как укажешь
+                \begin{multicols}{2}
+                    addss \\
+                    subss \\
+                    mulss \\
+                    divss \\
+                    \columnbreak \\
+                    addsd \\
+                    subsd \\
+                    mulsd \\
+                    divsd 
+                \end{multicols}
+                ss работа в в скалярном виде с числом с одинарной точностью
+                sd работа в скалярном виде с числом 2 точностью
+                \item \textbf{comicss}
+                \item \textbf{comicsd}
+                \item[!] выставляют ZF, SF, PF (PF в случае ошибки) операнд это регистр
+            \end{enumerate}
+        \end{description}
+        \item Векторные инстуркции
+        \begin{description}
+            \item \textbf{movups(movupd)} op1, op2; берут все 128 бит op1, op2 - (память|xmm[$0\dots7$]) \\
+            \item \textbf{movaps(movapd)}; где a-aligned требует выравненнного стека по 16 бит работает быстрее 
+            \item Пример (мнемоника инструкций по аналогии)\\ 
+            \textbf{addps} xmm0, xmm1; сложит векторно каждый блок сложит векторно
+        \begin{flalign*}
+            &|\quad \underset{32}{\quad} \quad&|\underset{32}{\quad}&|\underset{32}{\quad}|\underset{32}{\quad}| && xmm\emptyset \\
+            &|\quad \underset{32}{\quad} \quad&|\underset{32}{\quad}&|\underset{32}{\quad}|\underset{32}{\quad}| && xmm1 \\
+            &|\quad \underset{32}{xmm1[3]+xmm0[3]} \quad &|\underset{32}{\quad}&|\underset{32}{\quad}|\underset{32}{\quad}| && xmm\emptyset\\
+        \end{flalign*}
+        сложит 4 числа одновременно
+        \item xorps(d)
+        \item xorps xmm0, xmm0; занулит xmm0
+        \end{description}
+        \item Конвертация
+        \begin{description}
+            \item[*] cvt$\underset{\text{что}}{[p,s][s,d,i]}$ 2 $\underset{\text{куда}}{[p,s][s,d,i]}$ op1, op2; op1 - куда, op2 - что
+            \item[!] Пример cvtss2sd xmm0, xmm1;
+            \begin{description}
+                \item[!] первая буква [ps] - векторно или скалярно (весь регистр или лишь один блок)
+                \item[!] вторая буква [sdi] - одинарная точность 32бита, 2 точность 64 бита, в целые числа знаковые
+            \end{description}  
+        \end{description}
+
+    \end{enumerate}
+    \newpage
+    \section{Продолжение чисел с плавающей точкой}
+    \hypertarget{add_floating}{}
+    \begin{lstlisting}
+        cvtsd2si xmm, reg32\64
+        cvtsd2ss xmm|mem, xmm
+        cvtsi2sd mem32|64(reg32|64), xmm
+        cvtsi2ss mem32|64(reg32|64), xmm
+        cvtss2sd xmm|mem32, xmm
+        ; замечания по переводу в целочисленный:
+        cvtss2si xmm|mem64, xmm; если число вылезло за диапозон то
+        ; положит в память 100000...
+        ; после запятой часть округляется к ближайшему чётному 
+        ; см 2 бита последние
+        cvttsd2si xmm|mem64, reg32|64; t-урезание
+        ; если число вышло за диапозон допустим порядок 2^2^10
+        ; то заполнит единицами (как максимальное)
+        ; часть после запятой выкинет сразу
+        cvttss2si xmm|mem32, reg32|64
+    \end{lstlisting}
+    команда cvt[t]s - скалярная
+    cvt[t]p - векторное кладёт в 128 битное место очевидно\\
+    в AVX инструкциях: мнемоника инструкций начинается с V - VCVTSD2SI к примеру регистры ymm 
+    \section*{вычислить скалярное произведение}
+    \begin{flalign*}
+        &A:|\underset{\square}{\quad}|\underset{\bigcirc}{\quad}|\underset{\bigtriangleup}{\quad}|\underset{\bigtriangledown}{\quad}\scalebox{1.5}{|}\quad|\quad|\quad|\quad\scalebox{1.5}{|}\quad|\quad|\quad|\quad\scalebox{1.5}{|}\quad|\quad|\quad|\quad| \\
+        &B:|\underset{\square}{\quad}|\underset{\bigcirc}{\quad}|\underset{\bigtriangleup}{\quad}|\underset{\bigtriangledown}{\quad}\scalebox{1.5}{|}\quad|\quad|\quad|\quad\scalebox{1.5}{|}\quad|\quad|\quad|\quad\scalebox{1.5}{|}\quad|\quad|\quad|\quad| \\
+    \end{flalign*}
+    A и B выравнены в памяти по 16 то есть адрес начала\\
+    внутри числа одинарной точности 32 бита \\
+    мы положим в xmm0 командой \textbf{movaps} произведём умножение \textbf{mulps}\\
+    \begin{flalign*}
+        |\underset{\square}{\quad}|\underset{\bigcirc}{\quad}|\underset{\bigtriangleup}{\quad}|\underset{\bigtriangledown}{\quad}|
+    \end{flalign*} \\
+    сделаем также для обоих массивов и положим в xmm0 произведение c посощью векторных инструкций\\
+    \section*{Сложить все произведения}
+    Способ 0 - просто выгрузить в память и сложить по сути скалярно потребует много взаимодействий с памятью \\
+    
+    Способ 1 инстурукция \textbf{haddps} - горизаонтальное сложение появилось в SSE3
+    \begin{align*}
+        &|\underset{\square_1}{\quad}|\underset{\bigcirc_1}{\quad}|\underset{\bigtriangleup_1}{\quad}|\underset{\bigtriangledown_1}{\quad}| && xmm0 \\
+        &|\underset{\square_2}{\quad}|\underset{\bigcirc_2}{\quad}|\underset{\bigtriangleup_2}{\quad}|\underset{\bigtriangledown_2}{\quad}| && xmm1 \\
+    \end{align*} \\
+    haddps xmm0, xmm1, xmm0;
+    \begin{align*}
+        &|\underset{\square_1+\bigcirc_1}{\quad}|\underset{\bigtriangleup_1+\bigtriangledown_1}{\quad}|\underset{\square_2+\bigcirc_2}{\quad}|\underset{\bigtriangleup_2+\bigtriangledown_2}{\quad}| && xmm1 \\
+    \end{align*}
+    
+    Способ 2 с помоoщью инстуркции \textbf{shuffps} xmm0, xmm1, imm8(байт с маской); появилось в SSE2
+    \begin{align*}
+        &|\underset{3(11)}{\square}|\underset{2(10)}{\bigcirc}|\underset{1(01)}{\bigtriangleup}|\underset{0(00)}{\bigtriangledown}| && xmm0
+    \end{align*}
+    - снизу подписаны адреса соответсвенно 11\_10\_01\_00 \\
+    второй регистр адрес назначения \\
+    инстуркция сделает перестановку по байту (поделим на 4) смотрим двойкам \\
+    для примерера 00\_11\_10\_01 \\
+    значит $11\rightarrow00,10\rightarrow11,01\rightarrow10,00\rightarrow01$ будто сдвиг по циклу влево если указать несколько позиций конечных одинаковых то поведение непредсказуемо
+    shuffps xmm0, xmm1 00111001b
+    \begin{align*}
+        &|\underset{10\rightarrow11}{\bigcirc}|\underset{01\rightarrow10}{\bigtriangleup}|\underset{00\rightarrow01}{\bigtriangledown}|\underset{01\rightarrow00}{\square}| && xmm0
+    \end{align*}
+    по итогу мы последовательно циклом пройдёмся сложим и не будем общаться через шину памяти много раз
+
+    \begin{description}
+        \item[*] перед просмотром примера можно рассмотреть obj файл через objdump -d main.obj; что то на nm (Linux) для того чтобы разобраться с линковкой нескольких объектных файлов с модификатором Public T, нет t, также есть u - undefined
+        \item[!] важен порядок линковки сначала main.obj а потом multiply.obj 
+    \end{description}
+    \newpage
+    \section*{Работа с динамической память}
+    \hypertarget{dynamic_mem}{}
+    \textbf{код с комментариями в ТГ!!} в итоговой версии конспекта будут ссылки
+    \newpage
+    \section*{Строковые команды}
+    \hypertarget{strings_op}{}
+    \begin{enumerate}
+        \item флаг \textbf{DF} будет отвечать за сторону обхода строки(массива)
+        \begin{enumerate}
+            \item \textbf{cld} - сбросить DF
+            \item \textbf{std} - выставить DF
+        \end{enumerate}
+        Будем считать что \textbf{DF} изначально не определён
+        \begin{enumerate}
+            \item \textbf{movsb} ; байты 8бит
+            \item \textbf{movsw} ; слова 16бит
+            \item \textbf{movsd} ; 2 слова 32бит
+        \end{enumerate} 
+        \item операции передачи строки
+        \begin{description}
+            \item[$\triangle$] копирует массив ds:esi в es:edi,  ds, es - сегментные регистры, для \textbf{rep} (чуть ниже объяснение) в \textbf{ecx} длину массива
+            \item[$\bigcirc$] операндов нет, как и все последующие инструкции работают без операндов
+            \item[$\Box$] использует ecx, esi, edi, ds, es, eflags при условии что ecx $\ne$ 0
+        \end{description}
+        \begin{lstlisting}
+mov [edi], [esi]; псевдокод
+dec ecx
+DF = 1: ; то есть если DF выставлен то копирует на -- адресов
+    dec esi
+    dec edi
+DF = 0: ; то есть если DF не выставлен то копирует на ++ адресов
+    inc esi
+    inc edi
+        \end{lstlisting}
+        \item чтобы многократно вызвать \textbf{movsb|movsw|movsd} нужно использовать \textbf{rep movsb|movsw|movsd} пока \textbf{ecx} $\ne$ 0
+        Тогда скопируется массив ECX символов согласно DF из [ESI] в [EDI]
+        \item операции сравнения строк:
+        \begin{enumerate}
+            \item \textbf{cmpsb}
+            \item \textbf{cmpsw}
+            \item \textbf{cmpsd}
+        \end{enumerate}
+        \begin{description}
+            \item[$\triangle$] по аналогии с movsb зависит от DF будет сравнивать попарно байты/слова/двойные слова
+            \item[$\bigcirc$] вызов с \textbf{repe} повторять пока ecx $\ne$ 0 и пока вхождение символов равны так что в [edi] и [esi] останутся байты разные или строки идентичны
+            \item[$\Box$] вызов с \textbf{repne} повторять пока ecx $\ne$ 0 и пока вхождение символов не равны 
+        \end{description}
+        если строки идентичны то \textbf{ZF} = 0
+        \item Строковые операции уступают в производительности векторным*
+        \item Операции сравнения с определённым набором байтов
+        \begin{enumerate}
+            \item \textbf{scasb}; образец в al
+            \item \textbf{scasw}; образец в ax
+            \item \textbf{scasd}; образец в eax
+        \end{enumerate}
+        \begin{description}
+            \item[$\bigcirc$] DF аналогично, при 1 адреса на уменьшение, при 0 увеличение
+            \item[$\Box$] Взаимодействует с массивом по адресу es:edi, длина массива всё также в ecx 
+            \item[$\triangle$] вызов с \textbf{repe} повторять пока ecx $\ne$ 0 и пока вхождение символа с образцом равны
+            \item[$\triangledown$] вызов с \textbf{repne} повторять пока ecx $\ne$ 0 и пока вхождение символа с образцом не равны 
+        \end{description}
+        \item операция сохранения в регистр
+        \begin{enumerate}
+            \item \textbf{lodsb}
+            \item \textbf{lodsw}
+            \item \textbf{lodsd}
+        \end{enumerate}
+        сохраняет содержимое [edi] в регистре al|ax|eax
+        \item операция заполнения
+        \begin{enumerate}
+            \item \textbf{stosb}
+            \item \textbf{stosw}
+            \item \textbf{stosd}
+        \end{enumerate}
+        \begin{description}
+            \item[$\bigcirc$] DF логика та же
+            \item[$\triangle$] берёт из al|ax|eax и кладёт в [es:edi]
+            \item[$\Box$] работает c \textbf{rep}, заполнит длиной ecx массив образцами из eax
+        \end{description}
+    \end{enumerate}
+    \textbf{смотреть пример в ТГ!!}
+    \newpage
+    \section*{Макросы}
+    \hypertarget{makros}{}
+
+    \begin{tikzpicture}[
+        node distance=3cm,
+        box/.style={draw, rectangle, minimum width=2cm, minimum height=1.5cm, align=center}
+        circle/.style={fill, inner sep=1.5pt}
+    ]
+        \node[box] (1) {1. макроподстановка};
+        \node[box, right=of 1] (2) {2. компиляция};
+        \node[box, right=of 2] (3) {3. объектный файл};
+        
+        \draw[-Latex] (1) -- (2);
+        \draw[-Latex] (2) -- (3);
+    \end{tikzpicture}
+
+    \begin{enumerate}
+        \item Ассесмблер
+        \item Сюда подставить код - код от макроса
+        \item текст
+    \end{enumerate}
+    Ассемблер прочитаем ASM файл и вставит текст из макроса\\
+    причём рекурсивно то есть он и в текст дополнит макросами \\
+    сначала он соберёт код полностью с учётом вставок а только потом 
+\begin{lstlisting}
+ml ... prog.asm
+появится файл:
+prog.lst
+\end{lstlisting}
+В этом файле хранится информация после макроподстановки \\
+Директивы \\
+\begin{enumerate}
+    \item .listmacro;
+    \item .nolistmacro;
+\end{enumerate}
+в макросах console.inc включени .notlistmacro, что значит что после подстановки в <prog>.lst макроса не будет
+\begin{lstlisting}
+имя equ выражение; имя = вырежение
+ARR_PARM_OFF = 8+4+4; выражение =(equ) лучше пользоваться = если это макропеременная
+ARR_PARM_OFF[ebp]; подставит 8+4+4
+%ARR_PARM_OFF[ebp]; подставит 16
+\end{lstlisting}
+\section*{Макрос синтаксис}
+\begin{lstlisting}
+<Имя> macro <список_параметров>;
+; <список_параметров> := <параметр> {, <параметр>} 
+\end{lstlisting}
+Виды параметров:
+\begin{enumerate}
+    \item просто <параметр> := \textbf{<Имя>}
+    \item обязательный <параметр> :=  \textbf{<Имя>: req}
+    \item параметр со значением по умолчанию := \textbf{<Имя>:= текст}
+\end{enumerate}
+как передовать параметры: \\
+\begin{lstlisting}
+.BIAKA a, , 12 ; макрос с 3 параметрами 2 параметр - пустое слово|значение по умолчанию|Выдаст ошибку если параметр req
+!, - экранирует запятую
+.BIAKA a, <большой текст>, b; конструкция в скобочках воспринимается единственным параметром - строкой.
+\end{lstlisting}
+Подстановка в текст \\
+\begin{lstlisting}
+    YEAR = 2025
+    "Сегодня &YEAR& год"
+\end{lstlisting}
+подставит 2025 как число \\
+\begin{lstlisting}
+<Имя> macro <список_параметров>;
+    ;; Это коментарий с одинарной ; не получится
+    тело макроса
+endm
+\end{lstlisting}
+Конструкция досрочного выхода: \textbf{exitm} \\
+метка, конструкция
+\begin{lstlisting}
+    :after_loop_in_macros ;;метка начинается с :
+
+    goto after_loop_in_macros
+\end{lstlisting}
+Метки Ассемблера внутри макроса:
+\begin{lstlisting}
+    local список_меток_для_макроса;
+;; пример 
+    local mark_err
+
+    mark_err:
+\end{lstlisting}
+название метки будет удалено сохранится лишь число ??000017\\
+конструкция .err, дойдя до блока будет ошибка\\
+\begin{lstlisting}
+    .err текст
+    ...
+    exitm
+    ;; выведет текст компилятором в случае ошибки
+\end{lstlisting}
+конструкция echo текст\\
+и \%echo выражение
+соответственно выведет значение или текст во время компиляции \\
+СМ пример в тг
+
+\newpage
+\section*{Макросы продолжение}
+\hypertarget{makros2}{}
+меня не было
+
+
+\newpage
+\section*{Многомодульное программирование}
+\hypertarget{module-programming}{}
+    \textbf{a.asm} - головной файл
+    \begin{lstlisting}
+...
+Start:
+    ...
+    mov var_b, 100
+    ...
+end Start
+    \end{lstlisting}
+    
+    \textbf{b.asm}
+    \begin{lstlisting}
+...
+    add eax, var_b
+...
+    end
+    \end{lstlisting}
+
+    \textbf{c.asm}
+    \begin{lstlisting}
+...
+    sub var_b, 16
+...
+    end
+    \end{lstlisting}
+\begin{enumerate}
+    \item[1] var\_b -> имя предоставляется
+    \item[2] var\_b >- имя испрользуемой в модуле
+\end{enumerate}
+ИМЯ = символ для линковки
+\begin{enumerate}
+    \item \textbf{strong} - сильные имена, имя должно быть указано лишь однажды
+    \item \textbf{weak} - слабые имена, имя можно будет переопределить
+\end{enumerate}
+Конструкция для предоставляения:
+\begin{lstlisting}
+public имя переменной|функции|метки;
+\end{lstlisting}
+Конструкция для получения:
+\begin{lstlisting}
+extern cписок имён
+\end{lstlisting}
+\begin{enumerate}
+    \item[] для переменных: имя\_переменной: [byte|word|...]
+    \item[] для функций: имя\_переменной: [near|proc] - первый смотрит на соглашение
+\end{enumerate}
+типичный пролог asm файла:
+\begin{lstlisting}
+.686
+.model flat cdecl|stdcall|...
+\end{lstlisting}
+при написании stdcall, cdecl ассемблер переименует названия под стандарт для паскаля ничего не пишем что имена не менялись\\
+.asm $\rightarrow$ .obj \\
+Секции:
+\begin{enumerate}
+    \item .data
+    \item .data?
+    \item .code
+\end{enumerate}
+при компиляции изначально не понять смещение offset var\_a, так как всё будет слеплено в один файл после потому существуют заголовки:\\
+\begin{tabular}{c|c|c}
+    имя &
+    размер &
+    где встречается \\
+\end{tabular}
+... ничерта не понял
+... неебические иллюстрации не для моего уровня теха
+\begin{enumerate}
+    \item Архитектура
+    \item Размер Секций|их позиций в файле
+    \item Смещение до точки входа
+    \item Список динамических подгружаемых библиотек
+    \item Размер стека
+    \item С какого адреса размещать программу 
+\end{enumerate}
+Динамически подгружаемые данные. \\
+таблицы этих DLL лок: GOT - Global offset table как правило переменных\\
+PLT - f123: ... \\
+ну тут пиздец \\
+\section*{взаимодействие с Pascal}
+способы взаимодействия: \\
+1. Ассемблерные вставки
+2. Интринтики
+3. Слинковать с obj Ассемблера \\
+\begin{lstlisting}
+asm
+...
+... набор инстукций
+... 
+end ['eax', 'ecx']
+\end{lstlisting}
+в конце список регистров изменённых вставкой \\
+для линковки с obj файлом: \{L путь\_до\_объектного\_файла\}
+\newpage
+\section*{Макроархитектура}
+\hypertarget{macroarch}{}
+\bf{Теневые реистры} \\
+в процессоре существует множество регистров, скрытые от пользователя \\
+Пример когда мы обращаемся к eax нат самом деле мы обращаемся к теневому регистру\\
+\bf{Блок команд} \\
+Все инструкции попадают в назначенный блок команд \\
+Допустим представим команду так как она хранится в блоке \\
+add byte ptr[edx], 45 \\
+преобразуется в \\
+mov тень$_i$, 45 \\
+load тень$_j$, edx; тень$_j$ $\leftarrow$ [edx] \\
+add тень$_k$, тень$_j$, тень$_i$ \\
+store edx, тень$_k$ \\
+команды load и store - самые долгие, тк работают с памятью \\
+*работа с регистрами быстрее чем с константами \\
+\bf{Конвеер}
+* иллюстрация с сборкой самолёта коннвер с сцеплением \\
+груду мусора собрать \\
+собрали элементы \\
+собрали частично \\
+собрали \\
+выкатили \\
+дверки для дополнительных если двигатель в самолёт надо что то стороннее вставить \\
+проблемы - данные на вход неполны ждём, зависимости - ждём кучу пузырей \\
+чем дальше переход тем хуже \\
+
+разгон конвеера - время прохождения от начала и до конца \\
+\\
+Доступ в память\\
+load|store \\
+короче общается через иерархию кэшей \\
+кэш комманд и кэш данных  отличаются
+\newpage
+\section*{Предсказание переходов}
+\hypertarget{predict_jmps}{}
+запихать, но если мы не угадали, то окажется что то что мы вычислили окажется никому не нужным и придётся пустить в конвеер по метке
+Существует 2 способа ускорения
+\begin{enumerate}
+    \item Таблица переходов
+    \item спекулитивное выполнение
+\end{enumerate}
+\begin{description}
+    \item[] Спекулитивное выполнение возможно при нескольких АЛУ
+    \item[] выполнение происходит одновремнно на двух ветках (то что после jne и после метки) после сравнения подставит нужную ветку, ветка просчитывается в рамках буфера
+    \item[] Глубина предсказаний -  число различных исходов
+\end{description}
+\begin{description}
+    \item[]Таблица переходов
+\end{description}
+\begin{tabular}{|c|c|c|c|}
+    \hline
+    Откуда & куда & счётчик & счётчик неуспеха \\ 
+    \hline
+    & & & \\
+    \hline
+    & & & \\
+    \hline
+\end{tabular} \\
+В тот момент когда процессор доходит до нового перехода от вычисляет по некоторой функции что вытащить из таблички для нового перехода по числу срабатываний и неуспеха \\
+Благодаря табличке мы будем чаще предсказывать что действительно произойдёт по отношению числу срабатываний и неуспехов.
+\newpage
+\section*{Прерывания}
+\hypertarget{preriv}{}
+существуют 2 вида прерывания:
+\begin{enumerate}
+    \item Внешние прерывания - вызвано внешним устройством
+    \item Внутренние - вызвано схемой процессора (пример обращение к несуществующему адресу)
+\end{enumerate}
+У каждого прерывания есть номер прерывания - всего их 256, чего очень мало так как внешних устройств много допустима ситуация, когда от 10 подключенных жётских дисков прерывания будут сливаться в один номер \\
+Прерывания и Исключения - различия \\
+\begin{enumerate}
+    \item Прерывание предразумевает что ошибочная ситуация не произошла
+    \item Исключение содержит помимо номера прерывания сведения об ошибки
+\end{enumerate}
+когда случилось прерывание - процессор естественный ход прерывает и выполняет обработку этого прерывания \\
+Регистр прерываний (вектор прерываний) - 256 битный регистр, при происхождение прерывания, он заносится в вектор после обработки соответсвующий бит обнуляется обратно \\
+изначально\\
+\begin{tabular}{c|c|c}
+    контроллер & шина & описание\\
+    IC & ISA & interrupt controller ранее внешние устройства физически подключались, и вектор прерываний работал от замыкания проводов\\
+    PIC & PCI & Pragramm IC программные прерывания обработывались отдельной схемой \\
+    APIC & PCI & Advanced создан с учётом работы между ядрами и процессорами: подсхема lpic (local) внешняя схема распределяля обаработку прерываний нескольким ядрам \\
+    MSI & PCI|PCI express & устройство отправялет некоторое сообщение (сообщений всего 2048) - ничего не замыкается, программным образом процессор обрабатывает
+\end{tabular}
+регистр флагов - IF (Interrupt Flags)
+IF = 0 - на прерывение не реагирует \\
+IF = 1 - на прерывание регирует \\
+cli sti - ставит 0 и 1 соответсвенно\\
+Idtr Idt - таблицы\\
+Idtr - interrupt description table  register - содержит адрес таблицы и размер (регистр) \\
+idt - interrupt description table \\
+поля IDT:
+\begin{enumerate}
+    \item[1] используется или нет
+    \item[2] адрес обработчика прерываний(виртуальный)
+    \item[3] тип обработчика прерываний
+    \item[4`] номер сегмента кода (где лежит обработчик прерываний) в GDT
+    \item[4``] Номер TSS (task save segment) сегмента
+    \item[5] DPL - desired privilege level
+    \item[6] размер адреса 
+\end{enumerate}
+при возникновении прерывания:
+\begin{enumerate}
+    \item на старом стеке
+    \item на новом стеке
+\end{enumerate}
+В зависимости от уровни привелегий процессор сам может сбрасывать IF или нет \\
+на старом стеке: программа выполнялась дошла до N иструкции произошло прерывание \\
+\begin{enumerate}
+\item старый CS, eflags и EIP кладём на стек в случае ошибки - информация о ней.
+\item сменили сегмент на тот что в табличке (CS)
+\item сменили EIP на тот что в табличке
+\item CLI - аппаратно
+\end{enumerate}
+*иллюстрация \\
+на новом стеке - всё то же самое но сохраняется SS и ESP сохраним: SS ESP CS eflags EIP *сообщение об ошибке* \\
+также используется iret новый стек возьмём из TSS \\
+в прерывании необходимо сохранить все регистры в случае использования TSS не надо. \\
+\end{document}

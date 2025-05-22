@@ -1,0 +1,232 @@
+Microsoft (R) Macro Assembler Version 6.14.8444		    05/22/25 18:09:17
+multiply.asm						     Page 1 - 1
+
+
+				.686P
+				.XMM
+				.model flat, stdcall
+				option casemap:none
+				
+ = XMM0				xmm0 equ XMM0
+ = XMM1				xmm1 equ XMM1
+ = XMM2				xmm2 equ XMM2
+ = XMM3				xmm3 equ XMM3
+ = XMM4				xmm4 equ XMM4
+ = XMM5				xmm5 equ XMM5
+ = XMM6				xmm6 equ XMM6
+ = XMM7				xmm7 equ XMM7
+				
+				
+				public scalar_mul
+				
+ 00000000			.code
+				;
+				; соглашение stdcall
+				;
+				; Скалярное произверение:
+				; первый аргумент указатель на массив a
+				;  [ebp + 8]
+				;
+				; второй аргумент указатель на массив b
+				;  [ebp + 12]
+				;
+				; третий аргумент размер массива
+				;  [ebp + 16]
+				;
+ 00000000			scalar_mul proc
+ 00000000  55			        push ebp
+ 00000001  8B EC		        mov ebp, esp
+				        
+ 00000003  57			        push edi
+ 00000004  56			        push esi
+ 00000005  53			        push ebx
+				    
+ 00000006  8B 7D 08		        mov edi, [ebp + 8]
+ 00000009  8B 75 0C		        mov esi, [ebp + 12]
+				    
+ 0000000C  8B 45 10		        mov eax, [ebp + 16]
+ 0000000F  BB 00000004		        mov ebx, 4
+ 00000014  BA 00000000		        mov edx, 0
+ 00000019  F7 F3		        div ebx   ; в eax - размер массива делённый на 4
+				                  ; в edx - остаток от деления на 4.
+				    
+ 0000001B  0F 57 C0		        xorps xmm0, xmm0
+				
+				        ;
+				        ; цикл по элементам векторов в прямом порядке.
+				        ;
+ 0000001E  B9 00000000		        mov ecx, 0
+ 00000023			    loop_vector_scalar_mul:
+ 00000023  3B C8		        cmp ecx, eax
+ 00000025  73 16		        jae after_loop_vector_scalar_mul
+				        
+				    
+				        ;    xxxx:xxxx:xxxx:xxxx|xxxx:xxxx:xxxx:xxxx|
+				        ;
+				        ;
+				        ; ecx*4*4 + edi - смещение для достура к началу
+				        ;                 очередной четвёрки элементов 
+				        ;                 массива a
+				        ;
+ 00000027  8B D9		        mov ebx, ecx
+ 00000029  C1 E3 04		        shl ebx, 4 ; ebx := ebx * 16
+ 0000002C  0F 28 0C 3B		        movaps xmm1, [edi + ebx]
+ 00000030  0F 28 14 33		        movaps xmm2, [esi + ebx]
+				        
+				        ; если части регистров xmm1 и xmm2 считать элементами
+				        ; массива, то для операции векторного умножения получим: 
+				        ; xmm1[0] := xmm1[0] * xmm2[0];
+				        ; xmm1[1] := xmm1[1] * xmm2[1];
+				        ; ....
+				        ; xmm1[3] := xmm1[3] * xmm2[3];
+				        ;
+				        ; затем для сложения будет так же.
+				        ;
+ 00000034  0F 59 CA		        mulps xmm1, xmm2
+ 00000037  0F 58 C1		        addps xmm0, xmm1
+				        
+ 0000003A  41			        inc ecx
+ 0000003B  EB E6		        jmp loop_vector_scalar_mul
+ 0000003D			    after_loop_vector_scalar_mul:
+				        
+				         ;xorps  xmm2, xmm2  ; занулили xmm2
+				
+				;       SSE3 не поддерживается masm 6.14  приходится закоментировать.
+				;       следующие инструкции
+				;
+				;        haddps xmm2, xmm0
+				;        haddps xmm0, xmm2
+				        
+ 0000003D  F3/ 0F 10 D0		         movss xmm2, xmm0
+				    
+				         ;shufps xmm1, xmm0, число  8 - битное   ааbbccdd
+				         ; Здесь aa - 2 бита новая позиция старшего упакованного в регистр
+				         ; числа одинарной точности.
+				         ; bb -- следующая часть,
+				         ; .... и так далее.
+				         ;
+				         ; нам необходимо организовать циклический сдвиг элементов (плавающая точка одинарной точности).
+				         ; это можно сделать так:
+				         ;   00 11 10 01  <--- новые позиции элементов в векторном регистре. 
+				         ;   3   2  1  0  <---- номера элементов (изначальные позиции, не поменяные).
+				         ;
+				    
+ 00000041  0F C6 C0 39		         shufps xmm0, xmm0,  00111001b
+ 00000045  F3/ 0F 58 D0		         addss  xmm2, xmm0
+				    
+ 00000049  0F C6 C0 39		         shufps xmm0, xmm0,  00111001b
+ 0000004D  F3/ 0F 58 D0		         addss  xmm2, xmm0
+				        
+ 00000051  0F C6 C0 39		         shufps xmm0, xmm0,  00111001b
+ 00000055  F3/ 0F 58 D0		         addss  xmm2, xmm0
+				
+ 00000059  F3/ 0F 10 C2		         movss xmm0, xmm2
+				        
+				        ;
+				        ; дообрабатываем оставшуюся часть массива,
+				        ; где элементов недостаточно для формирования векторной инструкции.
+				        ; их количество остаток от деления на 4.
+				        ;
+				
+				        ; устанавливаем  значение ecx, так,
+				        ; так, чтобы он указыват на номер элемента 
+				        ; сразу после всех четвёрок.
+ 0000005D  C1 E0 02		        shl eax, 2
+ 00000060  8B C8		        mov ecx, eax
+ 00000062  8B 5D 10		        mov ebx, [ebp + 16]  ; размер массива
+ 00000065			    loop_process_array_tail:
+ 00000065  3B CB		        cmp ecx, ebx
+ 00000067  73 15		        jae after_loop_process_array_tail
+				        
+ 00000069  F3/ 0F 10 14		        movss xmm2, [edi+ecx*4]
+	   8F
+ 0000006E  F3/ 0F 10 1C		        movss xmm3, [esi+ecx*4]
+	   8E
+ 00000073  F3/ 0F 59 D3		        mulss xmm2, xmm3
+ 00000077  F3/ 0F 58 C2		        addss xmm0, xmm2
+				    
+ 0000007B  41			        inc ecx
+ 0000007C  EB E7		        jmp loop_process_array_tail
+ 0000007E			    after_loop_process_array_tail:
+				    
+ 0000007E  83 EC 04		        sub esp, 4
+ 00000081  F3/ 0F 11 04		        movss [esp], xmm0
+	   24
+ 00000086  D9 04 24		        fld dword ptr [esp]
+ 00000089  83 C4 04		        add esp, 4
+				    
+ 0000008C  5B			        pop ebx
+ 0000008D  5E			        pop esi
+ 0000008E  5F			        pop edi
+				    
+ 0000008F  5D			        pop ebp
+ 00000090  C3			        ret
+ 00000091			scalar_mul endp
+				
+				end
+Microsoft (R) Macro Assembler Version 6.14.8444		    05/22/25 18:09:17
+multiply.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000000 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000091 Para	  Public  'CODE'	
+
+
+Procedures,  parameters and locals:
+
+                N a m e                 Type     Value    Attr
+
+scalar_mul . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000091 Public STDCALL
+  loop_vector_scalar_mul . . . .	L Near	 00000023 _TEXT	
+  after_loop_vector_scalar_mul .	L Near	 0000003D _TEXT	
+  loop_process_array_tail  . . .	L Near	 00000065 _TEXT	
+  after_loop_process_array_tail 	L Near	 0000007E _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+MM0  . . . . . . . . . . . . . .	Text   	 MM(0)
+MM1  . . . . . . . . . . . . . .	Text   	 MM(1)
+MM2  . . . . . . . . . . . . . .	Text   	 MM(2)
+MM3  . . . . . . . . . . . . . .	Text   	 MM(3)
+MM4  . . . . . . . . . . . . . .	Text   	 MM(4)
+MM5  . . . . . . . . . . . . . .	Text   	 MM(5)
+MM6  . . . . . . . . . . . . . .	Text   	 MM(6)
+MM7  . . . . . . . . . . . . . .	Text   	 MM(7)
+XMM0 . . . . . . . . . . . . . .	Text   	 XMM(0)
+XMM1 . . . . . . . . . . . . . .	Text   	 XMM(1)
+XMM2 . . . . . . . . . . . . . .	Text   	 XMM(2)
+XMM3 . . . . . . . . . . . . . .	Text   	 XMM(3)
+XMM4 . . . . . . . . . . . . . .	Text   	 XMM(4)
+XMM5 . . . . . . . . . . . . . .	Text   	 XMM(5)
+XMM6 . . . . . . . . . . . . . .	Text   	 XMM(6)
+XMM7 . . . . . . . . . . . . . .	Text   	 XMM(7)
+xmm0 . . . . . . . . . . . . . .	Text   	 XMM0
+xmm1 . . . . . . . . . . . . . .	Text   	 XMM1
+xmm2 . . . . . . . . . . . . . .	Text   	 XMM2
+xmm3 . . . . . . . . . . . . . .	Text   	 XMM3
+xmm4 . . . . . . . . . . . . . .	Text   	 XMM4
+xmm5 . . . . . . . . . . . . . .	Text   	 XMM5
+xmm6 . . . . . . . . . . . . . .	Text   	 XMM6
+xmm7 . . . . . . . . . . . . . .	Text   	 XMM7
+
+	   0 Warnings
+	   0 Errors
