@@ -202,3 +202,47 @@ OUTBIN macro numb_to_print:req
     pop esi
     pop eax
 endm
+
+outflags macro
+    local zsf, zzf, zof, zcf
+
+    push eax
+    push ebx
+    pushfd
+
+    outstr 'SF = ', 0
+    mov bl, '0'
+    jns zsf
+        mov bl, '1'
+    zsf:
+    outchar bl
+    newline
+
+    outstr 'ZF = ', 0
+    mov bl, '0'
+    jnz zzf
+        mov bl, '1'
+    zzf:
+    outchar bl
+    newline
+
+    outstr 'OF = ', 0
+    mov bl, '0'
+    jno zof
+        mov bl, '1'
+    zof:
+    outchar bl
+    newline
+
+    outstr 'CF = ', 0
+    mov bl, '0'
+    jnc zcf
+        mov bl, '1'
+    zcf:
+    outchar bl
+    newline
+
+    popfd
+    pop ebx
+    pop eax
+endm
