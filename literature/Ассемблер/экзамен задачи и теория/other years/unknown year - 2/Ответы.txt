@@ -1,0 +1,81 @@
+В студии появляются ответы:
+1)
+00 0200
+03 0200
+10 0200
+00 0204
+03 0204
+01 0200
+10 0200
+2)
+64502
+3)
+mov [bx]+2, 4
+shl dx, 5
+adc ds, w
+4)
+mov ax, 4bach
+mov ds, ax
+mov bx, 0ch
+mov ax, 400
+sub ax, sp
+shr ax, 1
+mov cx, ax
+jcxz fin
+mov bp, sp
+L: mov ax, [bp]
+test ax, 1
+jnz next
+mov [bx], ax
+add bx, 2
+next:
+add bp, 2
+loop L
+fin:
+5)
+114, of=cf=1, sf=0
+6)
+assgn proc near
+push bp
+mov bp, sp
+push ax
+push bx
+mov ax, [bp+4]
+mov bx, [bp+6]
+mov [bx], ax
+pop bx
+pop ax
+pop bp
+ret 4
+assgn endp
+...
+lea ax, cnt
+push ax
+mov ax, zero
+push ax
+call assgn
+7)jgt macro v, L
+local T
+ifb <v>
+jmp L
+else
+irp a, <v>
+if type a eq word
+cmp a, 0
+jle T
+endif
+endm
+jmp L
+T: nop
+endif
+endm
+8)
+Ненунах, пусть ботаны пишут)
+9)
+Редактор внешних связей
+10)
+Адрес - порядковый номер в памяти
+Маш. слово - 32 бит, хранящиеся в ячейке
+Код операции - часть маш. слова, которая в ЦП трактуется как номер команды, которую надо выполнить 
+
+
