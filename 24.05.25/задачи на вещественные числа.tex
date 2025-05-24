@@ -1,0 +1,64 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[top=2cm,bottom=3cm,left=2cm,right=2cm,nohead]{geometry}
+
+\begin{document}
+
+Считайте что это и есть тест
+
+\section*{задачи на вещественные числа (не затрагивая прогу)}
+\begin{enumerate}
+    \item перечислите все необычные состояния вещественные числа float типа, когда они достигаются. на примере real32, real64
+    \item заполните табличку числом разрядов \\
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        стандарт& размер & бит знака & порядок & мантисса & bias \\
+        \hline
+        half precision & & & & \\
+        \hline
+        single precision & & & & \\
+        \hline
+        double precision & & & & \\
+        \hline
+        quad precision & & & & \\
+        \hline
+        extended precision & & & & \\
+        \hline
+    \end{tabular}
+    \item как громкий NaN переделать в тихий NaN
+    \item что выдаст sqrt(-1.0f) ;;C код
+    \item В каких случаях float может считаться денормализованным
+    \item переведите в число единичной точности\\
+    +0 \\ 
+    86.125 \\
+    196.75 \\
+    1/3 \\
+    -0 \\
+    $20*2^{-128}$ \\
+    \item сложите два числа half precision: \\
+    890.5 + 10.5625\\
+    прокомментируйте все сдвиги поэтапно \\
+    \item решите уравнение считая что числа single precision
+    98.25+X=0\\
+    решите это же самое уравнение уже в half precision, сравните результат \\
+    \item достижение наибольшего и наименьшего значения float \\
+\end{enumerate}
+
+\section*{задачи на ассемблере}
+\begin{enumerate}
+    \item Укажите разрядность XMM регистра, сколько их
+    \item Согласено соглашению (cdecl, stdcall) как передаётся вещественное число
+    \item реализовать сложение, вычитание чисел (дополнительно умножение, деление) одинарной и двойной сложности используя SSE2
+    \item Сложить NaN c любым другим числом
+    \item Сравнить поведение qNaN и sNaN
+    \item Приведите операции что в результате дадут (real4 (single precision)):
+    \begin{enumerate}
+        \item +inf
+        \item -inf
+        \item NaN
+        \item +0
+        \item -0
+    \end{enumerate}
+\end{enumerate}
+\end{document}
