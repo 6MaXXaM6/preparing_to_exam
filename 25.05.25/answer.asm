@@ -163,7 +163,7 @@ Start:
     outfloat z4; +inf
     newline
 
-        movss xmm0, myr4n3
+    movss xmm0, myr4n3
     movss xmm1, r4p0
     divss xmm0, xmm1; отриц число делить на 0
 
