@@ -33,7 +33,7 @@ OUTFLOAT macro numb_to_print
         pushfd
 
         lea eax, numb_to_print
-        invoke crt_printf, offset L_fmt_str_macros_for_float, dword ptr [eax], dw
+        invoke crt_printf, offset L_fmt_str_macros_for_float, qword ptr [eax]
 
         popfd
         popad
