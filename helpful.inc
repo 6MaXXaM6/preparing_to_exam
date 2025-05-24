@@ -127,7 +127,9 @@ OUTHEX macro numb_to_print:req
                     endif
                 endif 
             endif
-            rol eax, (1+type numb_to_print - 4)*8
+            if type numb_to_print ne 1
+                rol eax, (5-type numb_to_print )*8
+            endif
             repeat type numb_to_print
                 OUTHEX_byte
                 rol eax, 8
@@ -177,7 +179,9 @@ OUTBIN macro numb_to_print:req
                     endif
                 endif 
             endif
-            rol eax, (1+type numb_to_print - 4)*8
+            if type numb_to_print ne 1
+                rol eax, (5 - type numb_to_print)*8
+            endif
             repeat type numb_to_print
                 OUTBIN_byte
                 rol eax, 8
