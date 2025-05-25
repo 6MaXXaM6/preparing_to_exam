@@ -2,12 +2,15 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english,russian]{babel}
 \usepackage[top=2cm,bottom=3cm,left=2cm,right=2cm,nohead]{geometry}
+\usepackage{multicol}
+
 
 \begin{document}
 \section*{задачи многомодульное программирование}
 \begin{enumerate}
     
     \item ЕСЛИ вы не открывали пример многомодульного программирования откройте - можно на виртуалке всех команды в readme файлике после возвращайтесь!
+    \item Синтаксис и Семантика public extrn
     \item Будет ли ошибка?
 \begin{verbatim}
 include console.inc
@@ -40,8 +43,113 @@ end
         \hline
     \end{tabular*}
     \item опишите что случится с секциями .code разных модулей после линковки в 1 загружаемый файл.
+    \item MyProc proto :byte,:dword,:byte - для чего существует возможность описывать прототип опишите ситуацию
+    \item private для чего существует
+    \item найдите все ошибки исправьте после линковки и запуска должен отработать next\_day взяв параметры как у прототипа
+\begin{verbatim}
+.686; доп модуль
+.XMM
+
+.model flat, stdcall
+public 
+.code next_day@12
+; рпринимает 3 параметра
+next_day@12:
+next_day proc private
+push ebp
+mov ebp, esp
+...
+pop ebp
+ret 12
+next_day endp
+end
+\end{verbatim}
+
+
+\begin{verbatim}
+.686; основной модуль
+.XMM
+
+.model flat
+
+.data 
+op1 db ?
+op2 dd ?
+op3 db ?
+.code
+Start:
+    next_day proto :byte,:dword,:byte
+    push op3
+    push op2
+    push op1
+    call next_day
+    ...
+end Start
+\end{verbatim}
+    \item схематично стрелками как на лекции обрисуйте все выходы и входы сделайте вывод о линковке подпишите внешние имена в формате stdcall (указана опция: option proc:private)
+\begin{multicols}{2}
+\begin{verbatim}
+;main.asm
+public cringe, twop@4
+.data
+    extrn love:real4; 7F800000h))
+    cringe dw ?
+    
+.code
+twop@4:
+twop proc
+...
+twop endp
+
+onep proc public
+...
+onep endp
+Start
+    ...
+end Start
+\end{verbatim}
+\columnbreak
+\begin{verbatim}
+    ;module.asm
+    public love
+    
+    .data
+        love real4 ?
+        extrn cringe:word
+        extrn true:byte
+        
+    twop proto :dword
+    .code
+        extrn onep@0:proc
+    ...
+    end
+\end{verbatim}
+\end{multicols}
+пролог в обоих случая Стандартный
+\begin{verbatim}
+.686
+
+.model flat, stdcall
+option proc:private
+\end{verbatim}
+    Если можно убрать ошибки совместимости вычеркиванием одной строки сделайте
+\item дан листинг указать на месте подчёркиваний числа или буквы
+\begin{multicols}{2}
+\begin{verbatim}
+00000000			.data
+        extrn hapiness:byte
+00000000  00000005 [		    garbage db 5 dup (?)
+00
+]
+00000005 2A			    mydata db 42; 
+\end{verbatim}
+\columnbreak
+\begin{verbatim}
+    000000XX  88 25 ________ _	   mov hapiness, ah
+    000000XX  C6 05 ________ _	   mov mydata, 8
+    08
+\end{verbatim}
+\end{multicols}
 \end{enumerate}
-    
-    
 
 \end{document}
