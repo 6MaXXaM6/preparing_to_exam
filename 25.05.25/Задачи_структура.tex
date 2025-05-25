@@ -32,7 +32,7 @@
 \end{verbatim}
     \item опишите .stack, может ли эта секция встретиться в неглавном модуле?
     \item Бородоченкова 6.1 (на правильность написания адресных выражений)
-    \item Бородоченкова 7.1 a) б) 7.2 а) 7.6 д) (7.6 ж)
+    \item Бородоченкова 7.1 a) б) 7.2 а) 7.6 д) - макет для решения 7.2 7.6 в директории, задача усложенена: сколько людей имеют средний балл выше 4.6?
     \item На листочке опишите структуру вашего холодильника (творчески)
     \item Выпишите весь вывод
 \begin{verbatim}
@@ -47,31 +47,19 @@ metadata ENDS
 .data
     typ db 5 dup ('6MaXXaM6'),0
     x metadata <12>, <23>
-
 .code
 start: 
-    
     outu length metadata.author
-    newline
     outu length typ
-    newline
     outu lengthof metadata.author
-    newline
     outu sizeof metadata.author
-    newline
     outu size metadata.author
-    newline
     outu sizeof metadata
-    newline
     outu sizeof x
-    newline
     outstrln offset x.author
     outu x.timestamp
-
-    newline
     lea eax, x
     outu [eax+metadata.timestamp]
-
     exit
 end start
 \end{verbatim}
