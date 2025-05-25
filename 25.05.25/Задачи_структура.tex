@@ -2,11 +2,79 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english,russian]{babel}
 \usepackage[top=2cm,bottom=3cm,left=2cm,right=2cm,nohead]{geometry}
+\usepackage{multicol}
 
 \begin{document}
-\section*{задачи по теме и нет что я нашёл}
+\section*{задачи по структуре программы}
 \begin{enumerate}
-    \item 
+    \item Чем отличается директива equ и '='
+    \item в каком сегменте я могу написать equ
+    \item Чем отличается и какие ошибки произойдут и на каком этапе
+    \begin{multicols}{2}
+\begin{verbatim}
+.code
+    N equ 8
+    mov N, eax
+\end{verbatim}
+        \columnbreak
+\begin{verbatim}
+.const
+    N dd 8
+.code
+    mov N, eax
+\end{verbatim}
+    \end{multicols}
+    \item Опишите секцию .data?
+    \item программа компилируется стандартно "ml /c /coff /Fl main.asm" будет ли ошибка?
+\begin{verbatim}
+.data?
+    msg db 'Hello World', 0
+\end{verbatim}
+    \item опишите .stack, может ли эта секция встретиться в неглавном модуле?
+    \item Бородоченкова 6.1 (на правильность написания адресных выражений)
+    \item Бородоченкова 7.1 a) б) 7.2 а) 7.6 д) (7.6 ж)
+    \item На листочке опишите структуру вашего холодильника (творчески)
+    \item Выпишите весь вывод
+\begin{verbatim}
+include console.inc
+
+metadata STRUC
+    timestamp dq ?
+    author db '6MaXXaM6',0
+    testdata db 0FFh
+metadata ENDS
+
+.data
+    typ db 5 dup ('6MaXXaM6'),0
+    x metadata <12>, <23>
+
+.code
+start: 
+    
+    outu length metadata.author
+    newline
+    outu length typ
+    newline
+    outu lengthof metadata.author
+    newline
+    outu sizeof metadata.author
+    newline
+    outu size metadata.author
+    newline
+    outu sizeof metadata
+    newline
+    outu sizeof x
+    newline
+    outstrln offset x.author
+    outu x.timestamp
+
+    newline
+    lea eax, x
+    outu [eax+metadata.timestamp]
+
+    exit
+end start
+\end{verbatim}
 \end{enumerate}
 
 \end{document}
