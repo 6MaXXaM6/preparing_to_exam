@@ -4,16 +4,44 @@
 \usepackage[top=2cm,bottom=3cm,left=2cm,right=2cm,nohead]{geometry}
 
 \begin{document}
-\section*{задачи по теме и нет что я нашёл}
+\section*{задачи многомодульное программирование}
 \begin{enumerate}
-    \item Одна из функций компоновщика - редактирование межмодульных  связей. \\
-    в чём смысл этой функции?\\
-    почему её не может выполнить ассемблер?
-    \item На каком этапе компиляции ассемблерной программы выявляется ошибка 'неописанное имя'?
-    \item Определить что такое статическая и динамическая связь по данным между модулями на Ассемблере 
-    \item Дать определение сегментной организации памяти. Какой недостаток имеет СОП?
-    \item Есть предложения: extern x:abs и mov ax,x. \\
-    Какая служебная программа подставляет x в команду mov ax,x?
+    
+    \item ЕСЛИ вы не открывали пример многомодульного программирования откройте - можно на виртуалке всех команды в readme файлике после возвращайтесь!
+    \item Будет ли ошибка?
+\begin{verbatim}
+include console.inc
+
+.code
+myuniquestart: 
+    outstrln 'HelloWorld'
+    exit
+end myuniquestart
+\end{verbatim}
+    \item Вопрос со звёздочкой: будет ли ошибка?
+\begin{verbatim}
+include console.inc
+
+.code
+start: 
+    outstrln 'HelloWorld'
+    exit
+end
+\end{verbatim}
+    Если да то опишите как исправить (не приписывая после end start)
+    \item ml /c /coff /Fl main.asm - стандартная компиляция object файла для нас (или через wine) поясните за каждый ключ \\
+    \begin{tabular*}{15cm}{c|c}
+        \hline
+        /c &   \\
+        \hline
+        /coff & \\
+        \hline
+        /Fl & \\
+        \hline
+    \end{tabular*}
+    \item опишите что случится с секциями .code разных модулей после линковки в 1 загружаемый файл.
 \end{enumerate}
+    
+    
 
 \end{document}
