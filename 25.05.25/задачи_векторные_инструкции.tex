@@ -33,7 +33,7 @@ end Start
     \item решить задачу first.asm дан массив: ar\_real4 элементов 20, сколько из них достаточно сложить по модулю (использовать andss или сравнение с 0 умножение на 1) если складывать их по порядку записи чтобы сумма была больше sample\_real4 (условия в директории)
     \item 
     \begin{enumerate}
-        \item shufps xmm0, 00000110b - что произойдёт \\
+        \item shufps xmm0, xmm0, 00000110b - что произойдёт \\
         \begin{tabular}{|c|c|c|c|c|}
             \hline
              & xmm0[3] & xmm0[2] & xmm0[1] & xmm0[0] \\
@@ -43,7 +43,7 @@ end Start
             стало &   &  &  &   \\
             \hline
         \end{tabular}
-        \item shufps xmm0, 10110001b - что произойдёт \\
+        \item shufps xmm0, xmm0, 10110001b - что произойдёт \\
         \begin{tabular}{|c|c|c|c|c|}
             \hline
              & xmm0[3] & xmm0[2] & xmm0[1] & xmm0[0] \\
@@ -53,7 +53,7 @@ end Start
             стало &   &  &  &   \\
             \hline
         \end{tabular}
-        \item напишите 2 операнд shufps такой чтобы произошёл циклический сдвиг вправо
+        \item напишите 3 операнд shufps xmm0, xmm0, imm8 такой чтобы произошёл циклический сдвиг вправо
     \end{enumerate}
 
     \item расшифруйте:
