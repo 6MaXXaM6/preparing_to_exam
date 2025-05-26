@@ -1,0 +1,101 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[top=2cm,bottom=3cm,left=2cm,right=2cm,nohead]{geometry}
+
+\begin{document}
+этот файл прорешивается после написания мини-прака по счёту смешанного произведения причём попрошу загружать в xmm c помощью movaps и movups
+\section*{векторные инструкции}
+\begin{enumerate}
+    \item укажите вывод
+\begin{verbatim}
+.data
+    ar db ?
+    align 16
+    ar2 dd ?
+
+.code
+Start:
+    
+    lea eax, ar
+    outhex eax; out: 004032EE
+    newline
+
+    lea eax, ar2 
+    outhex eax; out: ?
+    newline
+
+    exit
+end Start
+\end{verbatim}
+какой вывод был бы если align не было\par
+Вопрос на align - аргумент степень 2 до 16 включительно align 32 - ошибка \\
+004032EE + 1(1 байт выделен) = 004032EF align 16 $\rightarrow$ адрес должен быть кратен 16 значит последний символ в 16 записи 0 - округлим в большую сторону ответ 004032F0 \\
+    \item comiss comisd ucomiss ucomisd - в чём отличие приведите код и примеры данных на которых можно увидеть различие comiss и ucomiss - какие флаги они выставляют  \\ - ответ на вопрос 1 в файле answer1\_vec.asm
+    \item решить задачу first.asm дан массив: ar\_real4 элементов 20, сколько из них достаточно сложить по модулю (использовать andss или сравнение с 0 умножение на 1) если складывать их по порядку записи чтобы сумма была больше sample\_real4 (условия в директории) \par
+    - ответ на вопрос 2 в файле answer2\_vec.asm
+    \item 
+    \begin{enumerate}
+        \item shufps xmm0, xmm0, 00000110b - что произойдёт \\
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+             & xmm0[3] & xmm0[2] & xmm0[1] & xmm0[0] \\
+             \hline
+            было &  000D & 000C & 000B & 000A \\
+            \hline
+            стало &  000A &  000A &  000B &  000C \\
+            \hline
+        \end{tabular}
+        \item shufps xmm0, xmm0, 10110001b - что произойдёт \\
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+             & xmm0[3] & xmm0[2] & xmm0[1] & xmm0[0] \\
+             \hline
+            было & 000D & 000C & 000B & 000A \\
+            \hline
+            стало & 000C  & 000D  &000A  &  000B \\
+            \hline
+        \end{tabular}
+        \item напишите 3 операнд shufps xmm0, xmm0, imm8 такой чтобы произошёл циклический сдвиг вправо
+        \par
+            shufps xmm0, xmm0, 10010011b
+        \par
+        \item[*] shufps xmm0, xmm1, 10110001b - что произойдёт вопрос со звёздочкой дополнительно\\
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+             & [3] & [2] & [1] & [0] \\
+             \hline
+            было xmm0 & 000D & 000C & 000B & 000A \\
+            \hline
+            было xmm1 & 100D & 100C & 100B & 100A \\
+            \hline
+            стало xmm0 &  &  &  &  \\
+            \hline
+            стало xmm1 &  &  & &   \\
+            \hline
+        \end{tabular}
+    \end{enumerate}
+
+    \item расшифруйте:
+    \begin{enumerate}
+        \item cvtss2si 
+        \item cvtsi2ss
+        \item cvtsd2ss
+        \item cvtps2pi
+        \item cvtpd2ps 
+    \end{enumerate}
+    используя cvt посчитайте сумму всех целых частей чисел массива из 3 задачи\par
+    Смотреть cvt\_illustration.asm
+    \item[*] что делает cvttss2si (tt не опечатка)\par
+    Смотреть cvt\_illustration.asm
+    \item  какой ещё способ существует для конвертации чисел в том числе в extended? \\
+    напите отрывок программы считая что \\
+\begin{verbatim}
+    z4 real4 ?
+    z8 real8 ?
+    z10 dt ?
+\end{verbatim}
+    конвертните z4 и положите в z8 и z10 не используя cvt
+\end{enumerate}
+
+\end{document}
