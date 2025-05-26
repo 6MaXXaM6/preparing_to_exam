@@ -118,7 +118,7 @@ Start:
     movss xmm2, r4sNaN
     movss xmm1, myr4n2 ; 12.125
 
-    ucomiss xmm0, xmm0
+    comiss xmm0, xmm0
 
     outflags
 
