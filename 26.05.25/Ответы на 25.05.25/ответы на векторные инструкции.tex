@@ -96,6 +96,22 @@ end Start
     z10 dt ?
 \end{verbatim}
     конвертните z4 и положите в z8 и z10 не используя cvt
+\begin{verbatim}
+.data
+    z4 real4 ?
+    z8 real8 ?
+    z10 dt ?
+.code
+
+
+Start:
+    fld z4
+    fstp z8
+    fstp z10
+    exit
+end Start
+\end{verbatim}
+положит сконвертненные данные
 \end{enumerate}
 
 \end{document}
