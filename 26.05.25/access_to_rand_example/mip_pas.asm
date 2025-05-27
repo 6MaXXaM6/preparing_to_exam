@@ -2,7 +2,7 @@
 .model flat
 
     .code 
-extern SYSTEM_$$_RANDOM$LONGINT$$LONGINT:near
+extern SYSTEM_$$_RANDOM$LONGINT$$LONGINT:near; уебанское fpc соглашение по названиям
 public iniar
 public init_vec
     .code

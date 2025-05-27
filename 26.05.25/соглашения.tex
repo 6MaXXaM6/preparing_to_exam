@@ -1,0 +1,101 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[top=2cm,bottom=3cm,left=0.5cm,right=2cm,nohead]{geometry}
+\usepackage{multicol}
+
+\begin{document}
+\section*{соглашения Stdсall}
+\begin{enumerate}
+    \item можно изменять eax, edx, ecx - остальные менять нельзя
+    \item стек чистит процедура
+    \item параметры принимает только через стек первый параметр ближе к началу памяти поэтому push его последний(справо налево)
+    \item результат возвращается al, ax, eax, edx:eax, st0
+    \item по наименованиям:
+    \begin{enumerate}
+        \item внешние переменные (данные) начинаются c \_
+        \item метки с \_
+        \item процедуры начинаются с \_ заканчиваются @N - N чиcло байтов параметров кратно 4
+    \end{enumerate}
+\end{enumerate}
+\section*{соглашения cdecl}
+\begin{enumerate}
+    \item можно изменять eax, edx, ecx - остальные менять нельзя
+    \item стек чистит тот кто вызвал
+    \item параметры принимает только через стек первый параметр ближе к началу памяти поэтому push его последний
+    \item результат возвращается al, ax, eax, edx:eax, st0
+    \item по наименованиям:
+    \begin{enumerate}
+        \item Символ подчеркивания (\_) префиксируется в имена, за исключением случаев, когда экспортируются \_\_cdecl функции, использующие компоновку C. \\
+        мы на ассемблере и паскале считайте всегда просто нижнее подчёркивание должно быть
+        \item .model, c ; заставит ассемблер использовать cdecl для имён
+    \end{enumerate}
+\end{enumerate}
+\section*{соглашения fastcall}
+\begin{enumerate}
+    \item можно изменять eax, edx, ecx - остальные менять нельзя 
+    \item слева направо первые параметры что возможно засунет в ecx, edx другие параметры принимает через стек первый параметр ближе к началу памяти поэтому push его последний(справо налево)
+    \item результат возвращается al, ax, eax, edx:eax, st0
+    \item по наименованиям:
+    \begin{enumerate}
+        \item все имена начинаются с @
+        \item после имени для процедур указание как в stdcall @N - число байтов с учётом регистров
+    \end{enumerate}
+\end{enumerate}
+\section*{соглашения pascal}
+\begin{enumerate}
+    \item можно изменять eax, edx, ecx - остальные менять нельзя
+    \item стек чистит процедура 
+    \item параметры принимает только через стек первый параметр ближе к концу сегмента поэтому push его первый(слева направо)
+    \item результат возвращается al, ax, eax, edx:eax, st0
+    \item по наименованиям:
+    \begin{enumerate}
+        \item всё капсом
+    \end{enumerate}
+\end{enumerate}
+\section*{соглашения pascal (register) практическая инфа}
+\begin{enumerate}
+    \item читай pascal
+    \item стек чистит процедура 
+    \item параметры принимает через регистры слева направо для регистро eax, edx, ecx 
+    \item результат возвращается al, ax, eax, edx:eax, st0
+    \item по наименованиям Pascal переименует при extern только cdecl лучше каждый раз самим писать extern name <имя>
+\end{enumerate}
+\section*{соглашение fpc практическая инфа}
+\begin{enumerate}
+    \item вроде справо налево чистит тот кто вызвал названия шиза посмотрите через nm смысл запоминать венгерские имена не вижу
+\end{enumerate}
+перепишите функцию c stdcall на cdecl, fastcall, pascal и подпишите как следует назвать функцию согласно соглашению если в .model не будет прописано соглашение
+\begin{verbatim}
+    .data 
+        myr4n1 real4 8.5
+    ; функция что будет рассмотрена
+    sum proc
+        push ebp; создание стекового кадра
+        mov ebp, esp
+        sub esp, 4; место под результат сложения
+    
+        cvtsi2ss xmm0, dword ptr [ebp+12]
+        addss xmm0, dword ptr [ebp+8]
+    
+        movss [esp], xmm0
+        fld dword ptr [esp]
+    
+        mov esp, ebp
+        pop ebp
+        ret 8
+    sum endp
+    
+    Start:
+        push 7
+        push myr4n1; 8.5
+    
+        call sum
+    
+        fstp z4; просто место в памяти
+        outf z4; распечатка 15.5
+    
+        exit
+    end Start
+\end{verbatim}
+\end{document}
