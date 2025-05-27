@@ -1,0 +1,19 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[top=2cm,bottom=3cm,left=0.5cm,right=2cm,nohead]{geometry}
+\usepackage{multicol}
+
+\begin{document}
+\section*{задачи на связь fpc и masm}
+большая часть задач просто на пощупать не переживайте если ничего не понимаете
+\begin{enumerate}
+    \item Вспомните сделать процедуру из fpc доступной изве (подсказка надо вспомнить как писать модули)
+    \item за что отвечает ключевое слово asm внутри функции \\
+    изучите  файл test\_inline\_assembly (можно написать свою ассемблерную вставку)
+    \item изучить access\_to\_rand\_example - в этом примере функция рандома берётся из fpc (компилятор fpc сам подставляет из библиотек) и используется внутри asm из которого уже экспортируются функции в головной модуль который получается после компиляции prant\_array 
+    \item для чего существует директива {\$L <имя файла>}
+    \item откройте файл в директории firstupr firstupr.pas (необходимо написать процедуру внешнюю для fpc) (решение уже лежит на момент пуша если затрудняетесь)
+    \item задание аналогично см secondupr.pas только попрошу написать во всех соглашениях что мы проходим кроме fastcall вместо него register так как fpc не работает с ним: cdecl, stdcall, pascal, register
+\end{enumerate}
+\end{document}

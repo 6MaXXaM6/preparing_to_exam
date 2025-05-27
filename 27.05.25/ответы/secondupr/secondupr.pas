@@ -24,10 +24,10 @@ end;
 // среднее арифметическое stdcall
 function srartrstdcall(var x: ar; N:word):real; stdcall; external name '_srartrstdcall@8';
 // среднее арифметическое cdecl
-function srartrcdecl(var x: ar; N:word):real; cdecl; external; // name 'srartrcdecl'; // нижнее подчёркивание прёт само причём неважно указать ли name или нет
-// среднее арифметическое pascal
+function srartrcdecl(var x: ar; N:word):real; cdecl; external; // name 'srartrcdecl'; // нижнее подчёркивание прёт само причём неважно указать ли name илинет
+// // среднее арифметическое pascal
 function srartrpascal(var x: ar; N:word):real; pascal; external name 'SRATRPASCAL';
-// среднее арифметическое register
+// // среднее арифметическое register
 function srartrregister(var x: ar; N:word):real; register; external name 'srartrregister';
 
 
