@@ -1,13 +1,247 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[english,russian]{babel}
-\usepackage[top=2cm,bottom=3cm,left=0.5cm,right=2cm,nohead]{geometry}
+\usepackage[top=2cm,bottom=3cm,left=1cm,right=2cm,nohead]{geometry}
 \usepackage{multicol}
 
 \begin{document}
-\section*{задачи}
-Было упущено пару теор моментов:
+\section*{теория}
 \begin{enumerate}
+    \item Что может быть фактическим параметром макрокоманды \par
+    любой текст (в том, числе пустой), сбалансированный по кавычкам и угловым скобкам, причём
+    этот текст не должен содержать запятых и точек с запятой вне вышеуказанных кавычек и скобок.
+    \item что происходит с параметрами при макровызове \par
+    при макровызове макропроцессор (=макрогенератор) находит макроопределение и подставляет в
+    макрос фактические параметры вместо формальных, генерируя, таким образом, макрорасширение.
+    При ответе на этот пункт нужна ещё такая добавка: при подстановке фактического параметра
+    производится выполнение макрооператоров (\&,<>,\%,!)
+    \item \%: посчитает макровыражение пример:
+\begin{multicols}{2}
+    \begin{verbatim}
+.code
+    myMacro macro op1:req
+        echo op1
+    endm
+Start:
+    M equ (3*5+7)
+    N equ mystring
+    myMacro M
+    myMacro %M
+    myMacro N
+    myMacro %N
+    myMacro %7+7
+    myMacro 7+7
+    exit
+end Start
+    \end{verbatim}
+    \columnbreak
+вывод: \\
+M \\
+22 \\
+N \\
+mystring \\
+14 \\
+7+7 \\
+\end{multicols}
+\item ! - символ экранирования
+\begin{multicols}{2}
+\begin{verbatim}
+.code
+    myMacro macro op1:req
+        echo op1
+    endm
+Start:
+    M equ 7*6
+    myMacro HelloWorld%M
+    myMacro HelloWorld!%M
+    myMacro HelloWorld!!!%M
+    myMacro Helloworld!!
+    myMacro !Helloworld
+    myMacro Helloworld!
+    exit
+end Start
+\end{verbatim}
+    \columnbreak
+вывод \\
+HelloWorld42 \\
+HelloWorld\%M \\
+HelloWorld!\%M \\
+Helloworld! \\
+Helloworld \\
+test.asm(17) : error A2038: missing operand for macro operator \\
+ myMacro(1): Macro Called From \\
+  test.asm(17): Main Line Code \\
+Helloworld! \\
+\end{multicols}
+отметим что \% и ! поставленные в конце выражения выдадут ошибку, необходимо экранировать
+\item Если фактический параметр заключён в угловые скобки (<>), то эти скобки считаются макрооператорами выделения, они заставляют рассматривать заключённый в них текст как единое целое, даже если в нём встречаются служебные символы. Обработка макровыделения заключается в том, что внешние парные угловые скобки отбрасываются при передаче фактического параметра на место формального. Обратите внимание, что отбрасывается только
+одна (внешняя) пара угловых скобок, если внутри фактического параметра есть ещё угловые
+скобки, то они сохраняются.
+\begin{multicols}{2}
+\begin{verbatim}
+.code
+    myMacro macro op1:req, op2:=<default>
+        echo op1
+        echo op2
+    endm
+Start:
+    SEMICOLON_CHAR TEXTEQU <;>
+    M equ 7*6
+    myMacro <HelloWorld%M, I`m>
+    myMacro <HelloWorld%M ; I`m> ; внутри комментарий
+    myMacro HelloWorld%M, I`m
+    exit
+end Start
+\end{verbatim}
+    \columnbreak
+вывод \\
+HelloWorld42, I`m \\
+default \\
+HelloWorld42 \\
+default \\
+HelloWorld42 \\
+I`m \\
+\end{multicols}
+
+\item \& - разделитель лексемы! важно могло слоиться неправильное впечатление что это указатель или разыменователь но это не так то что необходимо подставить надо выделять! пример \\
+\begin{multicols}{2}
+\begin{verbatim}
+M1 macro x
+    for i,<1,2,3>
+        x&&i db i
+    endm
+endm
+.data
+    M1 myvar
+    ; сгенерит myvar1 db 1 и другие
+\end{verbatim}
+с двух сторон отделить то что подставляешь за исключением конца и начала строки там только с одной стороны если у нас подстановка из одного имени то \& не нужен\\
+\columnbreak
+\begin{verbatim}
+M1 macro x, ze
+    for i,<1,2,3>
+        x&U&ze&&i&q db '$i$'
+    endm 
+endm
+.data
+    M1 myvar, _
+    ; сгенерит myvarU_1q db '1' и другие
+\end{verbatim}
+иной пример
+\end{multicols}
+что будет если \\
+если записать x\&i то i не подставится: myvari \\
+если записать x\&U\&ze\&\&i\&q но макропеременной ze нет:  myvarU\&ze\&1q \\
+если записать x\&U\&ze\&i\&q: myvarU\&ze1q
 \end{enumerate}
-Теперь по макросам:
+\newpage
+табличка конструкций \\
+\begin{tabular}{|c|c|}
+    \hline
+        type & размер одно элемента в байтах если константа то 0, \\
+    \hline
+        size & размер элементов до первой запятой  size real8 6 dup (?) = 48 \\
+    \hline
+        sizeof & размер элементов включая все перечисления через запятую \\
+    \hline
+        length & число элементов до запятой то есть вернёт 1 или то что перед dup  \\
+    \hline
+        lengthof & число всех элементов после метки \\
+    \hline
+\end{tabular} \\
+директивы условной компиляции \\
+\begin{tabular}{|c|c|}
+    \hline
+    ifb <op1>& (if blank) если параметр пустой то подстановку выполняем \\
+    ifnb <op1>& (if not blank) \\
+    ifdif <op1>, <op2>& (if difference) если разные то выполняем \\
+    ifidn <op1>, <op2>& (if identical) если одинаковые то выполняем \\
+    ifdifi <op1>, <op2>& (if difference ignore case) если разные регистронезависимо ('string' = 'StRiNg') то выполняем \\
+    ifidni <op1>, <op2>& (if identical ignore case) если одинаковые регистронезависимо то выполняем \\
+    \hline
+\end{tabular} \par
+Директива If выполняет подстановку согласно булевым значениям в макросах всё что не 0 это true, 0 = false \\
+логические выражения \\
+\begin{multicols}{3}
+    \noindent
+    EQ вместо =\\
+    LE вместо $\le$ \\
+    \columnbreak \\
+    GE вместо $\ge$ \\
+    LT вместо < \\
+    \columnbreak \\
+    GT вместо >\\
+    NE вместо $\ne$ \\
+\end{multicols}
+любой обозначенный 'if' завершается endif внутри могут быть выражения: else и elseif[idn|idni|dif|...] \\
+операции в макровыражениях и их приоритет:
+\begin{enumerate}
+    \item (), [], <>, length[of], size[of]
+    \item . (точка)
+    \item : (переопределение сегмента по умолчанию)
+    \item  ptr, offset, seg, type, this
+    \item high, low, highword, lowword (возвращает старшую и младшую половины от слова и от двух слов соответственно) 
+    \item Одноместные (унарные) + и – (для корректности 6+-+7)
+    \item *, / (в смысле div), mod, shl, shr
+    \item бинарные + и –
+    \item EQ, NE, LT, LE, GT, GE
+    \item not
+    \item and
+    \item or, xor
+    \item short, .type
+\end{enumerate}
+переходы внутри определния можно выполнять по макрометкам \\
+перед их использованием необходимо их объявить в начале макроса прописав:
+local L \\
+после чего где то внутри макроса поставить метку: \\
+:L (в отличии от меток asm : ставится перед), переход осуществляется по goto L\par
+для преждевременного выхода из макроса используется .exitm \\
+благодаря этой директиве можно заранее выйти из цикла или из всего макроса в случае ошибки при макропроцессировании \\
+.err <сообщение> - породит ошибку при компиляции \par
+\noindent
+\textbf{opattr} операнд - возвращает 16 байт: \\
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline
+    ? & ? & ? & ? & ? & ? & ? & ? & ? & ? & ? & ? & ? & ? & ? & ?  \\
+    \hline
+    15 & 14 & 13 & 12 & 11 & 10 & 9 & 8 & 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \\
+    \hline
+\end{tabular}
+\newpage
+\noindent
+;     Bit    Set If... \\
+;     0      имя метки процеду \\ 
+;     1      перемещаемая переменная (область данных)\\
+;     2      константа \\
+;     3      перемещаемый адрес \\
+;     4      регистровое выражение \\
+;     5      определён \\ 
+;     6      операнд в стеке (usually a LOCAL variable or parameter) \\
+;     7      имя в extrn label \\
+;     8-10   Language type (0=no type) \\
+что другие да фиг пойми вроде соглашения и чёт зарезервировано не нагуглил\\
+первые 8 бит аналогичны .type \par
+просто по циклам пример отрывок макроса проверить на регистр что можно менять по соглашению eax, edx, ecx  \\
+\begin{verbatim}
+local K
+K=0; это var K: integer:=0
+for reg,<eax, edx, ecx, ax, dx, cx, al, ah, dl, dh, cl, ch>
+    ifidni <reg>,<X>
+        K=1; это K:=1
+        exitm; преждевременный выход из цикла
+    endif
+endm
+\end{verbatim}
+по циклу forc
+\begin{verbatim}
+local K
+K=0; это var K: integer:=0
+forc reg,<adc>
+    ifidni <reg>,<e&reg&x>; проверка лишь на 4 байтные
+        K=1; это K:=1
+        exitm; преждевременный выход из цикла
+    endif
+endm
+\end{verbatim}
+цикл \textbf{while} выражение как в if - если что метки есть\\
 \end{document}
