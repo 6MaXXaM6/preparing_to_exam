@@ -44,7 +44,7 @@ sum3ups macro reg1, reg2
     endm
 endm
 
-; посчитать норму |reg1-reg2| положить в regoutput
+; посчитать норму |reg1-reg2| положить в regoutput для счёта использовать reg3tmp
 findR macro reg1, reg2, reg3tmp, regoutput
     movaps reg3tmp, reg1
     subps reg3tmp, reg2
@@ -57,9 +57,12 @@ findmin proc; vec1, vec2, vec3
     push ebp
     mov ebp, esp
 
+
     sub esp, 16
+    ; занулим на всякий в принцип можно не делать главное убедиться что movups сработает
     mov dword ptr [esp+12], 0
 
+    ; загружаем наши точки
     mov eax, [ebp+8] 
     mov3ups eax, xmm1
     mov eax, [ebp+12] 
@@ -69,11 +72,12 @@ findmin proc; vec1, vec2, vec3
 
 
     add esp, 16
-
+    ; ищем все расстояния
     findR xmm1, xmm2, xmm0, xmm4
     findR xmm1, xmm3, xmm0, xmm5
     findR xmm2, xmm3, xmm0, xmm6
 
+    ; проходимся и ищем рекорд - минимум
     movss xmm0, xmm4
 
     comiss xmm0, xmm5
