@@ -55,7 +55,7 @@ AB proc ; stdcall A, B, Z название _AB@12
     mov edi, [ebp+16]
 
     mov ecx, 0
-    
+    ; загрузили строки
     movups xmm1, [edx]
     movups xmm2, [edx+16]
     movups xmm3, [edx+32]
@@ -74,19 +74,19 @@ AB proc ; stdcall A, B, Z название _AB@12
         movups xmm5, [esp]
         add esp, 16
 
-        for i, <1, 2, 3, 4>;; обработка каждого столбца
-            movups xmm0, xmm&i ;;чтобы не портить xmm скопируем их
-            mulps xmm0, xmm5
-            ; счёт суммы
+        for i, <1, 2, 3, 4>;; обработка каждого столбца i - номер строки в ecx+1 - номер столбца
+            movups xmm0, xmm&i ;;чтобы не портить xmm с строкой скопируем их
+            mulps xmm0, xmm5 ;; умножим строку i на стобец ecx+1
+            ;; счёт суммы в xmm7
             movss xmm7, xmm0
-            repeat 3; 3 раза ещё сдвинуть
+            repeat 3;; 3 раза ещё сдвинуть
                 shufps xmm0, xmm0, 00111001b
                 addss xmm7, xmm0
             endm
-            movss [edi+ecx*4+i*16-16], xmm7
+            movss [edi+ecx*4+i*16-16], xmm7; положим в матрицу Z в в i строку (i*16-16) - смещение по строкам в ecx+1 столбец смещение по ecx*4
         endm
         inc ecx
-        cmp ecx, 4
+        cmp ecx, 4; до 4 смещение в 4*4 уже следующая строка
         jne L
 
     pop edi
@@ -106,12 +106,9 @@ Start:
     call printMatric
 
 
-    lea eax, Z4n4
-    push eax
-    lea eax, B4n4
-    push eax
-    lea eax, A4n4
-    push eax
+    push offset Z4n4
+    push offset B4n4
+    push offset A4n4
     call AB
 
     newline
