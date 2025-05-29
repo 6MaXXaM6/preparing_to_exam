@@ -38,6 +38,28 @@ Start:
     outstrln 'experiment', 0
     ; чтобы убидиться что А Н Сальников не прав или недопонят:
     ;ar_real4 real4 78.5, -32.67,  45.0,  -15.3...
+
+        outf ar_real4[0]
+    outchar ' '
+    outf ar_real4[4]
+    outchar ' '
+    outf ar_real4[8]
+    outchar ' '
+    outf ar_real4[12]
+    newline
+    movaps xmm3, ar_real4
+    shufps xmm3, xmm3, 11001011b; поиграться
+    movaps ar_result, xmm3
+    outf ar_result[0]
+    outchar ' '
+    outf ar_result[4]
+    outchar ' '
+    outf ar_result[8]
+    outchar ' '
+    outf ar_result[12]
+    newline
+
+
     movaps xmm3, ar_real4
     shufps xmm3, xmm3, 00000000b
     movss z4, xmm3
