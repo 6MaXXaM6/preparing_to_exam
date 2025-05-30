@@ -1,0 +1,79 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[top=1.5cm,bottom=2cm,left=1cm,right=1cm,nohead]{geometry}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{tabularx}
+
+\begin{document}
+\section*{Прогноз}
+\textbf{№1} \\
+Минимальный набор регистров для УМ: \\
+\vspace{0.3cm} \\
+\textbf{№2} \\
+вычислите что будет лежать в младшем регистре xmm0 после выполнения следующего кода
+\begin{verbatim}
+.data
+    r4 dd 3f800000h
+.code
+    movss xmm0, r4
+    sqrtss xmm0, xmm0; взятие квадратного корня
+\end{verbatim}
+\vspace{0.3cm}
+\textbf{№3}
+Подчеркните синтаксически неправильные инструкции: \\
+\begin{tabularx}{\textwidth}{|X|c|X|X|c|c|}
+    \hline
+    mov eax, [esi][4*edi]+7 & jmp esp & mov eax, eip & rol dword ptr [esi], cl & movsx eax, eax\\
+    \hline
+\end{tabularx}
+\vspace{0.2cm} \\
+\textbf{№4} \\
+напишите полную программу, в том числе секцию data, что найдёт наибольший промежуток монотонности нестрогого возрастания в массиве \textit{arrayword} длиной N (>0)  беззнаковых чисел, выведите результат, оформите в виде процедуры код подсчёта участка монотонности соблюдая cdecl\\
+нарисуйте стек, в процессе исполнения процедуры (если используются локальные переменные их тоже) \\
+\vspace{0.3cm} \\
+\textbf{№5} \\
+Нарисуйте связи что образует этот код (считать что по умолчанию процедуры приватные option proc:private) считать что masm ничего не переименует
+\begin{multicols}{2}
+a.asm
+\begin{verbatim}
+public closef
+.data
+    creative db ?
+    closef dd 12
+    extrn stoicism:dword
+.code
+Start:
+    extrn create_goal_life:proc
+    ...
+end Start
+\end{verbatim}
+\columnbreak
+b.asm
+\begin{verbatim}
+public stoicism
+.data
+    stoicism dd 42
+    extrn closef:dword, Start:near
+.code
+create_goal_life proc public
+...
+create_goal_life endp
+veryuseful_proc proc public
+...
+veryuseful_proc endp
+end
+\end{verbatim}
+\end{multicols}
+Отметте головной модуль, слинкуется ли код? \\
+\vspace{0.3cm} \\
+\textbf{№6} \\
+напишите макроопределение: Mdiv op1, op2, op3; op1 - r32|m32, op2 - r16|m16|const, op3 - const (число): op1:=op1 div ((op2 shl 2)*op3), в случае если op3 = 0 или op2 = const = 0 вывести ошибку  \\ напишите макрорасширение при вызове Mdiv eax, bx, 7 \\
+\vspace{0.3cm} \\
+\textbf{№7} \\
+дано 2 вектора из 4 чисел в 2 массивах single precision написать процедуру от 2 параметров: norm4d a, b - адрес на начало 1 массива и начало 2 массива соответственно согласно соглашению stdcall что будет находить норму вектора ||3a+b|| по норме p2 (квадратный корень (sqrtss) из суммы квадратов) \\
+\vspace{0.3cm} \\
+\textbf{№8} \\
+Что делают инструкции movntXX, когда они могут пригодится.
+\end{document}

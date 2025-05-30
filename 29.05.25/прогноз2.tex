@@ -1,0 +1,69 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[top=1.5cm,bottom=2cm,left=1cm,right=1cm,nohead]{geometry}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{tabularx}
+
+\begin{document}
+\section*{Прогноз}
+\textbf{№1} \\
+перечислите принципы Фон неймана: \\
+\vspace{0.3cm} \\
+\textbf{№2} \\
+сложите числа в half precision: \\
+1915 + 11.5625
+\vspace{0.3cm} \\
+\textbf{№3}
+Подчеркните синтаксически неправильные инструкции: \\
+\begin{tabularx}{\textwidth}{|X|c|X|X|c|c|}
+    \hline
+    lea eax, [2*eax+4*edi]-7 & jmp eip & add byte ptr [eax], 0 & rol dword ptr [esi], bl & align 5\\
+    \hline
+\end{tabularx}
+\vspace{0.2cm} \\
+\textbf{№4} \\
+напишите полную программу, в том числе секцию data, что найдёт длину наибольшего промежутка сумма элементов которого в массиве = 0 \textit{arrayword} длиной N (>0)  знаковых чисел, выведите результат, оформите в виде процедуры код соблюдая pascal массив передавать по ссылке можно менять главное выдать ответ\\
+нарисуйте стек, в процессе исполнения процедуры (если используются локальные переменные их тоже) \\
+\vspace{0.3cm} \\
+\textbf{№5} \\
+Нарисуйте связи что образует этот код (считать что по умолчанию процедуры приватные option proc:private) считать что masm ничего не переименует
+\begin{multicols}{2}
+a.asm
+\begin{verbatim}
+public openf
+.data
+    openf dd 0
+    extrn programmer_id:tword
+.code
+Start:
+    extrn drink_cofe:proc
+    ...
+end Start
+\end{verbatim}
+\columnbreak
+b.asm
+\begin{verbatim}
+public programmer_id
+.data
+    programmer_id dt 0FFh
+    extrn openf:dword, Ll:near
+.code
+drink_cofe proc public
+...
+drink_cofe endp
+end
+\end{verbatim}
+\end{multicols}
+Отметте головной модуль, слинкуется ли код? \\
+\vspace{0.3cm} \\
+\textbf{№6} \\
+Описать в виде макроса NULL RS обнуление регистров общего назначения. Здесь RS — это строка вида <R1,R2,…,R$_k$>, R$_i$ — регистр общего назначения, k $\ge$ 0. Выписать макрорасширения для макрокоманд NULL <AL,BX,ESI> и NULL <> \\
+\vspace{0.3cm} \\
+\textbf{№7} \\
+описать в виде процедуры um4x4 A, B - A и B ссылки на матрицы (16 написанных по порядку чисел строка за строкой), A:=A*B \\
+\vspace{0.3cm} \\
+\textbf{№8} \\
+Что значит маскировать прерывание
+\end{document}
